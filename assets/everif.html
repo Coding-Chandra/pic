@@ -1,0 +1,13 @@
+<div style="font-family: 'Rufina', serif; background: linear-gradient(135deg, #e0e7ff 0%, #b3c8d8 100%); padding: 20px; color: #333; line-height: 1.6; min-height: 100vh; display: flex; justify-content: center; align-items: center;">
+    <div style="background: #fff; border-radius: 15px; padding: 2rem; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); max-width: 500px; text-align: center;">
+        <h1 style="font-size: 1.75rem; color: #222; margin-bottom: 1.5rem;">Welcome to Picload!</h1>
+        <p style="font-size: 1rem; color: #666; margin-bottom: 1.5rem;">Hi {{ .User.Email }},</p>
+        <p style="font-size: 1rem; color: #666; margin-bottom: 1.5rem;">Thank you for signing up! Please verify your email address by clicking the button below to activate your Picload account.</p>
+        <a href="{{ .ConfirmationURL }}" style="display: inline-block; padding: 0.75rem 1.5rem; background: linear-gradient(135deg, #007AFF, #005BB5); color: #fff; text-decoration: none; border-radius: 12px; font-size: 1rem; font-weight: 500; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); transition: all 0.3s ease;">Verify Your Email</a>
+        <p style="font-size: 0.9rem; color: #666; margin-top: 1.5rem;">This link will expire in 24 hours. If you didn’t sign up, please ignore this email or contact support.</p>
+        <div style="font-size: 0.85rem; color: #888; margin-top: 2rem; border-top: 1px solid #ddd; padding-top: 1rem;">
+            <p>Need help? Contact us at <a href="mailto:picload2@gmail.com" style="color: #007AFF; text-decoration: none;">picload2@gmail.com</a></p>
+            <p>&copy; 2025 Picload. All rights reserved.</p>
+        </div>
+    </div>
+</div>

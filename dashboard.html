@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="PICLOAD Dashboard - Manage your photos">
+    <meta name="theme-color" content="#a855f7">
+    <title>Dashboard - PICLOAD</title>
+    <link rel="shortcut icon" href="logo.png" type="image/x-icon">
+    <link rel="apple-touch-icon" href="logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Playwrite+VN:wght@100..400&family=Roboto:ital,wght@0,100..900;1,100..900&family=Rufina:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./assets/dashboard.css">
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+</head>
+<body class="dashboard-body">
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <h1>Dashboard</h1>
+            </div>
+            <div class="navbar-actions">
+                <span id="userNameDisplay" class="user-display"></span>
+                <button id="logoutBtn" class="logout-button">
+                    <i class="fas fa-sign-out-alt"></i> Log Out
+                </button>
+                <a href="index.html" class="back-button" title="Back to Gallery">
+                    <i class="fas fa-arrow-left"></i> Gallery
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="dashboard-container">
+        <div id="authCheckMessage" class="auth-check">
+            <div class="spinner"></div>
+            <p>Verifying authentication...</p>
+        </div>
+
+        <div id="notAuthMessage" class="auth-message hidden">
+            <div class="auth-message-content">
+                <i class="fas fa-lock"></i>
+                <h2>Access Restricted</h2>
+                <p>You need to be logged in to access the dashboard.</p>
+                <button onclick="netlifyIdentity.open()" class="btn btn-primary">Log In</button>
+            </div>
+        </div>
+
+        <div id="dashboardContent" class="hidden">
+            <div class="dashboard-header">
+                <h2><i class="fas fa-images"></i> My Photos</h2>
+                <a href="admin.html" class="btn btn-primary">
+                    <i class="fas fa-cloud-upload-alt"></i> Upload New Photo
+                </a>
+            </div>
+
+            <div id="loadingState" class="loading-state">
+                <div class="spinner"></div>
+                <p>Loading your photos...</p>
+            </div>
+
+            <div id="photoList" class="photo-grid hidden"></div>
+
+            <div id="emptyState" class="empty-state hidden">
+                <i class="fas fa-images"></i>
+                <p class="empty-state-text">You haven't uploaded any photos yet.</p>
+                <a href="admin.html" class="btn btn-primary">
+                    <i class="fas fa-cloud-upload-alt"></i> Upload Your First Photo
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal hidden">
+        <div class="modal-overlay" id="editModalOverlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <i class="fas fa-edit"></i> Edit Photo
+                </h3>
+                <button id="closeEditModal" class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="editForm" class="edit-form">
+                <div class="form-group">
+                    <label for="editPhotoTitle" class="form-label">Title</label>
+                    <input type="text" id="editPhotoTitle" class="form-input" maxlength="25" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="editPhotoDescription" class="form-label">Description</label>
+                    <textarea id="editPhotoDescription" class="form-textarea" maxlength="200"></textarea>
+                    <p class="form-hint"><span id="editCharCount">0</span>/200</p>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" id="cancelEditBtn" class="btn btn-secondary">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="saveEditBtn">
+                        <i class="fas fa-save"></i>Save Changes
+                    </button>
+                </div>
+                <div id="editMessage" class="form-message hidden"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Modal -->
+    <div id="deleteModal" class="modal hidden">
+        <div class="modal-overlay" id="deleteModalOverlay"></div>
+        <div class="modal-content modal-confirm">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <i class="fas fa-trash"></i> Delete Photo
+                </h3>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this photo?</p>
+                <p class="text-muted">This action cannot be undone.</p>
+            </div>
+            <div class="form-actions">
+                <button id="cancelDeleteBtn" class="btn btn-secondary">Cancel</button>
+                <button id="confirmDeleteBtn" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> Delete Photo
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="./assets/dashboard.js" defer></script>
+    <script src=".netlify/functions/delete-images.js"></script>
+</body>
+</html>

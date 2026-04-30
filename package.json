@@ -1,0 +1,15 @@
+{
+  "name": "photo-gallery",
+  "version": "1.0.0",
+  "description": "Photo gallery with Netlify functions and Cloudinary uploads",
+  "main": "index.js",
+  "scripts": {
+    "build": "echo 'No build step'",
+    "start": "netlify dev"
+  },
+  "dependencies": {
+    "cloudinary": "^2.7.0",
+    "node-fetch": "^2.6.7",
+    "netlify-identity-widget": "^1.9.2"
+  }
+}

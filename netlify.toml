@@ -1,0 +1,19 @@
+[build]
+  functions = ".netlify/functions"
+  publish = "."
+
+[dev]
+  functions = "functions"
+  publish = "."
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = false
+  conditions = { "Path" = [ "!/.netlify/functions/*" ] }  # Exclude functions
+
+[[plugins]]
+package = "@netlify/plugin-functions-install-core"
+
+

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Picload - Photo Gallery</title>
+    <link rel="shortcut icon" href="logo.png" type="image/x-icon">
+    <link rel="apple-touch-icon" href="logo.png">
+    <link rel="stylesheet" href="./assets/main-style.css">
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+</head>
+<body>
+    <div class="preloader" id="preloader">
+        <img src="logo.png" alt="Logo" class="preloader-logo">
+    </div>
+
+    <header>
+        <div class="branding">
+            <span class="branding-text">PICLOAD</span>
+            <img src="logo.png" alt="Logo" class="branding-logo">
+        </div>
+        <input type="text" id="searchBar" class="search-bar" placeholder="🔍︎ Search by tags or keywords...">
+        <div id="authLinks">
+            <button class="admin-link" id="authButton">👤</button>
+        </div>
+    </header>
+
+    <div class="category-filter" id="categoryFilter"></div>
+
+    <div class="container">
+        <div class="controls">
+            <div class="sort-options">
+                <select id="sortSelect">
+                    <option value="new-to-old">New to Old</option>
+                    <option value="old-to-new">Old to New</option>
+                    <option value="most-downloaded">Most Downloaded</option>
+                    <option value="shuffled">Shuffled</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="loading" id="loadingMessage">Loading photos...</div>
+        <div class="error-message" id="errorMessage"></div>
+        <div class="gallery" id="photoGallery"></div>
+        <div class="empty-gallery" id="emptyGallery">
+              <img src="./assets/exclaim.png" style="height: 200px; width: 200px;">
+            <h2>No Photos Found</h2>
+            <p>Try adjusting your search or filters, or add images in the admin area.</p>
+        </div>
+
+        <div class="pagination" id="pagination">
+            <button id="prevPage">←</button>
+            <span id="pageInfo"></span>
+            <button id="nextPage">→</button>
+        </div>
+    </div>
+
+    <script src="get-script.js"></script>
+</body>
+</html>
