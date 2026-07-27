@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentUser = netlifyIdentity.currentUser();
     let currentPage = 1;
     const imagesPerPage = 12;
-    const majorTags = ['Wallpaper', 'Nature', 'Travel', 'Architecture', 'Parks', 'Art'];
+    const majorTags = ['Wallpaper', 'Nature', 'Travel', 'Architecture', 'Parks', 'Art', 'Food'];
 
     // Sync user state and update auth button
     function syncUserState(user) {
