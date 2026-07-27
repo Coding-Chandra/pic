@@ -1,6 +1,5 @@
 // Netlify Function: /.netlify/functions/generate-caption
-// Set ANTHROPIC_API_KEY in your Netlify site's environment variables.
-// This keeps the API key server-side — never put it in admin.html directly.
+// Set GEMINI_API_KEY in your Netlify site's environment variables.
 
 exports.handler = async (event) => {
     if (event.httpMethod !== 'POST') {
@@ -13,41 +12,34 @@ exports.handler = async (event) => {
             return { statusCode: 400, body: JSON.stringify({ error: 'Missing image data' }) };
         }
 
-        const response = await fetch('https://api.anthropic.com/v1/messages', {
+        const model = 'gemini-2.5-flash'; // cost-efficient, vision-capable, current as of mid-2026
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${process.env.GEMINI_API_KEY}`;
+
+        const response = await fetch(url, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'x-api-key': process.env.ANTHROPIC_API_KEY,
-                'anthropic-version': '2023-06-01',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                model: 'claude-haiku-4-5-20251001',
-                max_tokens: 300,
-                messages: [{
-                    role: 'user',
-                    content: [
-                        { type: 'image', source: { type: 'base64', media_type: mediaType, data: image } },
-                        {
-                            type: 'text',
-                            text: 'Look at this photo and respond with ONLY raw JSON, no markdown fences, no preamble: {"title": "<catchy title, max 25 characters>", "description": "<engaging description, max 200 characters>"}'
-                        }
+                contents: [{
+                    parts: [
+                        { text: 'Look at this photo and respond with ONLY raw JSON, no markdown fences: {"title": "<catchy title, max 25 characters>", "description": "<engaging description, max 200 characters>"}' },
+                        { inline_data: { mime_type: mediaType, data: image } }
                     ]
-                }]
+                }],
+                generationConfig: { maxOutputTokens: 300, responseMimeType: 'application/json' }
             })
         });
 
         const data = await response.json();
 
         if (!response.ok) {
-            return { statusCode: response.status, body: JSON.stringify({ error: data.error?.message || 'Anthropic API error' }) };
+            return { statusCode: response.status, body: JSON.stringify({ error: data.error?.message || 'Gemini API error' }) };
         }
 
-        const rawText = data.content?.find(block => block.type === 'text')?.text || '{}';
-        const cleaned = rawText.replace(/```json|```/g, '').trim();
+        const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
 
         let parsed;
         try {
-            parsed = JSON.parse(cleaned);
+            parsed = JSON.parse(rawText);
         } catch {
             return { statusCode: 502, body: JSON.stringify({ error: 'Could not parse AI response' }) };
         }
