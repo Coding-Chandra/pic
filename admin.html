@@ -7,244 +7,296 @@
     <link rel="shortcut icon" href="logo.png" type="image/x-icon">
     <link rel="apple-touch-icon" href="logo.png">
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/cc720c3bd4.js" crossorigin="anonymous"></script>
     <style>
-        body {
-            font-family: 'Rufina';
-            margin: 0;
-            padding: 0;
-            background-image: linear-gradient(135deg, #222222 0%, #27292d 100%);
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            color: #f2f2f2;
+        :root {
+            --bg-1: #0e0c18;
+            --bg-2: #15111f;
+            --bg-3: #0c0e19;
+            --ink: #f1edfa;
+            --muted: #a29bc4;
+            --glass: rgba(255,255,255,0.055);
+            --glass-strong: rgba(255,255,255,0.09);
+            --glass-border: rgba(255,255,255,0.12);
+            --accent-1: #a78bfa;
+            --accent-2: #fda4c0;
+            --blush: #ff9ecb;
+            --lilac: #b39dff;
+            --mint: #7fe9c4;
+            --success: #34d399;
+            --error: #fb7185;
         }
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(160deg, var(--bg-1) 0%, var(--bg-2) 50%, var(--bg-3) 100%);
+            color: var(--ink);
+            position: relative;
+            overflow-x: hidden;
+        }
+        .blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.28;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .blob.b1 { width: 440px; height: 440px; background: var(--blush); top: -140px; left: -110px; animation: drift1 20s ease-in-out infinite; }
+        .blob.b2 { width: 400px; height: 400px; background: var(--lilac); bottom: -150px; right: -100px; animation: drift2 24s ease-in-out infinite; }
+        .blob.b3 { width: 300px; height: 300px; background: var(--mint); top: 45%; right: 6%; animation: drift3 18s ease-in-out infinite; }
+        @keyframes drift1 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(70px,90px) scale(1.15); } }
+        @keyframes drift2 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-80px,-60px) scale(1.1); } }
+        @keyframes drift3 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-50px,60px); } }
+
         header {
-            background: linear-gradient(135deg, #a855f7e6, #facc15e6);
-            color: #fff;
+            background: var(--glass);
+            backdrop-filter: blur(20px) saturate(160%);
+            -webkit-backdrop-filter: blur(20px) saturate(160%);
+            border-bottom: 1px solid var(--glass-border);
             padding: 1rem 2rem;
-            text-align: center;
             position: sticky;
             top: 0;
             z-index: 10;
-            backdrop-filter: blur(5px);
             display: flex;
             justify-content: space-between;
             align-items: center;
-        }
-        header .branding a {
-            color: #fff;
-            text-decoration: none;
-            font-size: 2rem;
-            font-weight: 600;
-            letter-spacing: 1px;
-            transition: color 0.3s ease;
-        }
-        header .branding a:hover {
-            opacity: 0.8;
-        }
-        .user-info {
-            color: #fff;
-            font-size: 0.9rem;
-            padding: 0.5rem 1rem;
-            background: rgba(255,255,255,0.1);
-            border-radius: 8px;
-        }
-        .container {
-            max-width: 800px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-        .admin-panel {
-            color: #f2f2f2;
-            background: #565252;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px #ffffff1a;
-            padding: 2rem;
-        }
-        h2 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: #f2f2f2;
-        }
-        .upload-form {
-            display: flex;
-            flex-direction: column;
             gap: 1rem;
         }
-        input, textarea {
-            padding: 0.75rem;
-            color: #aeaeae;
-            background-color: #373737;
-            border: 1px solid;
-            border-image-source: linear-gradient(135deg, #a855f7e6, #facc15e6);
-            border-image-slice: 1;
-            font-size: 1rem;
-            transition: border-color 0.3s ease;
+        header .branding a {
+            font-family: 'Fraunces', serif;
+            color: var(--ink);
+            text-decoration: none;
+            font-size: 1.6rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
         }
-        input:focus, textarea:focus {
-            border-color: #4CAF50;
-            outline: none;
+        .header-right { display: flex; align-items: center; gap: 0.75rem; }
+        .user-info {
+            color: var(--muted);
+            font-size: 0.82rem;
+            padding: 0.45rem 0.9rem;
+            background: var(--glass-strong);
+            border-radius: 20px;
         }
-        textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-        button {
-            padding: 0.75rem;
-            background: linear-gradient(45deg, #4CAF50, #66BB6A);
-            color: #fff;
+        #logoutBtn {
+            background: var(--glass-strong);
+            color: var(--ink);
             border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 500;
+            padding: 0.5rem 1.1rem;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: background 0.3s ease;
+            transition: background 0.25s ease, transform 0.2s ease;
         }
-        button:hover {
-            background: linear-gradient(45deg, #388E3C, #4CAF50);
+        #logoutBtn:hover { background: rgba(255,255,255,0.16); transform: translateY(-1px); }
+
+        .container { max-width: 620px; margin: 3rem auto; padding: 0 1.25rem; position: relative; z-index: 1; }
+        .admin-panel {
+            background: var(--glass);
+            backdrop-filter: blur(28px) saturate(160%);
+            -webkit-backdrop-filter: blur(28px) saturate(160%);
+            border: 1px solid var(--glass-border);
+            border-radius: 26px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.45);
+            padding: 2.5rem;
         }
-        button:disabled {
-            background: #ccc;
-            cursor: not-allowed;
+        h2 {
+            font-family: 'Fraunces', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+            margin: 0 0 0.4rem;
+            color: var(--ink);
         }
-        .preview-container {
-            margin: 1rem 0;
-            text-align: center;
+        .admin-panel p { color: var(--muted); margin: 0 0 1.5rem; font-size: 0.92rem; }
+
+        .upload-form { display: flex; flex-direction: column; gap: 1rem; }
+        input, textarea {
+            padding: 0.85rem 1rem;
+            color: var(--ink);
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
         }
+        input::placeholder, textarea::placeholder { color: var(--muted); }
+        input:focus, textarea:focus {
+            border-color: var(--accent-1);
+            background: rgba(255,255,255,0.07);
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(167,139,250,0.18);
+        }
+        textarea { resize: vertical; min-height: 90px; }
+
+        button {
+            padding: 0.85rem;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+            color: #1a1425;
+            border: none;
+            border-radius: 14px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+            box-shadow: 0 6px 18px rgba(167,139,250,0.3);
+        }
+        button:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(167,139,250,0.42); }
+        button:disabled { background: rgba(255,255,255,0.06); color: var(--muted); box-shadow: none; cursor: not-allowed; transform: none; }
+
+        .preview-container { margin: 0.25rem 0; text-align: center; }
         #imagePreview {
             max-width: 100%;
-            max-height: 300px;
+            max-height: 280px;
             display: none;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            margin-bottom: 0.75rem;
         }
-        #imagePreview:hover {
-            transform: scale(1.02);
+
+        .ai-btn {
+            background: rgba(167,139,250,0.12);
+            color: #c7b6ff;
+            border: 1px solid rgba(167,139,250,0.35);
+            box-shadow: none;
+            font-size: 0.85rem;
+            padding: 0.65rem;
+            font-weight: 600;
         }
-        .login-button {
-            display: block;
-            margin: 1rem auto;
-            padding: 0.75rem 2rem;
-        }
-        .success-message {
+        .ai-btn:hover { background: rgba(167,139,250,0.22); transform: none; box-shadow: none; }
+        .ai-btn:disabled { background: rgba(255,255,255,0.04); border-color: transparent; color: var(--muted); }
+
+        .login-button { display: block; margin: 0.5rem auto 0; padding: 0.75rem 2.2rem; }
+
+        .success-message, .error-message {
             position: fixed;
-            top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%) scale(0.9);
-            background: linear-gradient(45deg, #4CAF50, #66BB6A);
-            color: white;
-            padding: 1.5rem 3rem;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            font-size: 1.2rem;
+            top: 50%;
+            transform: translate(-50%,-50%) scale(0.9);
+            padding: 1.25rem 2.5rem;
+            border-radius: 18px;
+            font-size: 1.05rem;
             font-weight: 600;
             text-align: center;
             z-index: 1000;
             display: none;
             opacity: 0;
             transition: all 0.3s ease;
+            backdrop-filter: blur(20px);
         }
-        .success-message.show {
-            display: block;
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
+        .success-message {
+            background: rgba(24,20,34,0.9);
+            color: var(--success);
+            border: 1px solid rgba(52,211,153,0.35);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
         }
+        .success-message.show { display: block; opacity: 1; transform: translate(-50%,-50%) scale(1); }
+
+        .error-message {
+            position: static;
+            transform: none;
+            background: rgba(251,113,133,0.1);
+            color: #ff9fae;
+            border: 1px solid rgba(251,113,133,0.3);
+            box-shadow: none;
+            margin-bottom: 0.25rem;
+        }
+        .error-message.show { display: block; opacity: 1; }
+
         .progress-container {
             width: 100%;
-            background: #f1f1f1;
-            border-radius: 5px;
-            margin: 1rem 0;
+            background: rgba(255,255,255,0.06);
+            border-radius: 20px;
+            overflow: hidden;
             display: none;
         }
         .progress-bar {
             width: 0%;
-            height: 20px;
-            background: linear-gradient(45deg, #4CAF50, #66BB6A);
-            border-radius: 5px;
+            height: 8px;
+            background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+            border-radius: 20px;
             transition: width 0.3s ease;
         }
-        .back-link {
-            text-align: center;
-            margin: 2rem 0;
-        }
+
+        .back-link { text-align: center; margin: 2rem 0; }
         .back-link a {
-            color: #4CAF50;
+            color: var(--muted);
             text-decoration: none;
             font-weight: 500;
-            transition: color 0.3s ease;
-            margin-right: 1rem;
+            font-size: 0.9rem;
+            transition: color 0.25s ease;
+            margin-right: 1.25rem;
         }
-        .back-link a:hover {
-            color: #388E3C;
-        }
-        .error-message {
-            background: linear-gradient(45deg, #ef4444, #dc2626);
-            color: white;
-            padding: 1rem;
-            border-radius: 10px;
-            margin-bottom: 1rem;
-            display: none;
-        }
-        .error-message.show {
-            display: block;
-        }
+        .back-link a:hover { color: #c7b6ff; }
     </style>
-    <script src="https://kit.fontawesome.com/cc720c3bd4.js" crossorigin="anonymous"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Playwrite+VN:wght@100..400&family=Roboto:ital,wght@0,100..900;1,100..900&family=Rufina:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+    <div class="blob b3"></div>
+
     <header>
-        <div class="branding">
-            <a href="/">Picload</a>
+        <div class="branding"><a href="/">Picload</a></div>
+        <div class="header-right">
+            <div class="user-info" id="userInfo" style="display: none;">
+                <span id="userEmail"></span>
+            </div>
+            <button id="logoutBtn" onclick="netlifyIdentity.logout()">Logout</button>
         </div>
-        <div class="user-info" id="userInfo" style="display: none;">
-            <span id="userEmail"></span>
-        </div>
-        <button id="logoutBtn" onclick="netlifyIdentity.logout()">Logout</button>
     </header>
-    
+
     <div class="container">
         <!-- Login Section -->
         <div class="admin-panel" id="loginSection">
             <h2>Admin Area</h2>
-            <p>You need to log in to access the admin features.</p>
+            <p>Log in to upload and manage photos.</p>
             <button class="login-button" onclick="netlifyIdentity.open()">Log in</button>
         </div>
-        
+
         <!-- Upload Section -->
         <div class="admin-panel" id="uploadSection" style="display: none;">
             <h2>Upload New Photo</h2>
-            
+            <p>Add an image, then let AI draft the title and description for you.</p>
+
             <div class="error-message" id="errorMessage"></div>
             <div class="success-message" id="successMessage">Photo uploaded successfully!</div>
-            
+
             <form class="upload-form" id="uploadForm">
                 <input type="file" id="photoUpload" accept="image/*" required>
-                
+
                 <div class="preview-container">
                     <img id="imagePreview" alt="Image Preview">
+                    <button type="button" id="aiGenerateBtn" class="ai-btn" disabled>✨ Generate title &amp; description with AI</button>
                 </div>
-                
+
                 <input type="text" id="photoTitle" placeholder="Photo Title" required maxlength="25">
                 <textarea id="photoDescription" placeholder="Photo Description (optional)" rows="3" maxlength="200"></textarea>
                 <input type="text" id="photoTags" placeholder="Tags (comma-separated, e.g., nature, sunset)" required>
-                
+
                 <div class="progress-container" id="progressContainer">
                     <div class="progress-bar" id="progressBar"></div>
                 </div>
-                
+
                 <button type="submit" id="uploadButton">Upload Photo</button>
             </form>
         </div>
-        
+
         <div class="back-link">
             <a href="index.html"><i class="fa-regular fa-square-caret-left"></i> Back to Gallery</a>
             <a href="dashboard.html" id="dashboardLink" style="display: none;"><i class="fa-solid fa-user"></i> My Dashboard</a>
         </div>
     </div>
-    
+
 <script>
     let currentUser = null;
+    let previewBase64 = null;
+    let previewMediaType = null;
 
     netlifyIdentity.on('init', user => { if (user) handleUserLogin(user); });
     netlifyIdentity.on('login', user => handleUserLogin(user));
@@ -267,14 +319,47 @@
 
     document.getElementById('photoUpload').addEventListener('change', function(event) {
         const file = event.target.files[0];
+        const aiBtn = document.getElementById('aiGenerateBtn');
         if (file) {
             const reader = new FileReader();
             reader.onload = function(e) {
                 const preview = document.getElementById('imagePreview');
                 preview.src = e.target.result;
                 preview.style.display = 'block';
+                previewBase64 = e.target.result.split(',')[1];
+                previewMediaType = file.type;
+                aiBtn.disabled = false;
             };
             reader.readAsDataURL(file);
+        } else {
+            previewBase64 = null;
+            previewMediaType = null;
+            aiBtn.disabled = true;
+        }
+    });
+
+    document.getElementById('aiGenerateBtn').addEventListener('click', async function() {
+        if (!previewBase64) return;
+        const btn = this;
+        const originalLabel = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = 'Thinking...';
+        clearError();
+        try {
+            const res = await fetch('/.netlify/functions/generate-caption', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ image: previewBase64, mediaType: previewMediaType })
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'AI generation failed');
+            document.getElementById('photoTitle').value = data.title || '';
+            document.getElementById('photoDescription').value = data.description || '';
+        } catch (err) {
+            showError('AI generation failed: ' + err.message);
+        } finally {
+            btn.disabled = false;
+            btn.textContent = originalLabel;
         }
     });
 
@@ -320,7 +405,6 @@
         clearError();
 
         try {
-            // Prepare uploader metadata
             const userEmail = currentUser.email;
             const userName = currentUser.user_metadata?.full_name || userEmail.split('@')[0];
             const userTag = userEmail.replace('@', '_').replace(/\./g, '_');
@@ -329,16 +413,12 @@
             formData.append('file', file);
             formData.append('upload_preset', 'picload_unsigned');
 
-            // Use user-specific folder so public_id is namespaced by user
             const publicId = `photo-gallery/${userTag}/${title.replace(/\s+/g, '-').toLowerCase()}-${Date.now()}`;
             formData.append('public_id', publicId);
 
-            // include tags and context. We URL-encode values to be safe
             const allTags = [...tags, `user-${userTag}`, `owner-${userEmail}`];
             formData.append('tags', allTags.join(','));
 
-            // Cloudinary accepts context as "key=value|key2=value2"
-            // encode values to avoid pipe/equals conflicts
             const ctxParts = [
                 `alt=${encodeURIComponent(title)}`,
                 `description=${encodeURIComponent(description || '')}`,
@@ -373,9 +453,11 @@
             successMessage.classList.add('show');
             setTimeout(() => successMessage.classList.remove('show'), 3000);
 
-            // Reset form UI
             document.getElementById('uploadForm').reset();
             document.getElementById('imagePreview').style.display = 'none';
+            document.getElementById('aiGenerateBtn').disabled = true;
+            previewBase64 = null;
+            previewMediaType = null;
             progressContainer.style.display = 'none';
             progressBar.style.width = '0%';
         } catch (error) {
@@ -398,5 +480,4 @@
     }
 </script>
 </body>
-
 </html>

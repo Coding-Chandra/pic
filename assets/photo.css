@@ -6,7 +6,7 @@
         }
         body {
             font-family: 'Rufina';
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: linear-gradient(135deg, #202124 0%, #4C4D4F  100%);
             color: #333;
             line-height: 1.6;
             -webkit-user-select: none;
@@ -16,7 +16,7 @@
         }
         header {
             position: sticky;
-            background: linear-gradient(135deg, #a855f7e6, #facc15e6);
+            background: linear-gradient(135deg, #9f6a30, #bc8952);
             color: #fff;
             padding: 1rem 2rem;
             z-index: 10;

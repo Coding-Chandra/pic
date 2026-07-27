@@ -7,7 +7,7 @@
 
 body {
     font-family: 'Rufina';
-    background: linear-gradient(135deg, #2A303A 0%, #1b2330 100%);
+    background: linear-gradient(135deg, #202124 0%, #4C4D4F  100%);
     background-attachment: fixed;
     color: #333;
     line-height: 1.6;
@@ -50,7 +50,7 @@ body {
 }
 
 header {
-    background: linear-gradient(135deg, #2A173D, #5A1E38);
+    background: linear-gradient(135deg, #9f6a30, #bc8952);
     color: #fff;
     padding: 1rem 2rem;
     z-index: 10;
@@ -127,14 +127,14 @@ header .admin-link{
     font-size: 1rem;
     font-weight: 500;
     padding: 0.6rem 1.2rem;
-    background: linear-gradient(to left, #714D72 0%, #2A173D 100%);
+    background: linear-gradient(35deg, #9f6a30, #bc8952);
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.2);
     border: none;
     transition: all 0.3s ease;
     cursor: pointer;
 }
 header .admin-link:hover{
-    background: linear-gradient(to right, #f6b2e1 0%, #4f35cd 100%);
+    background: linear-gradient(30deg, #9f6a30, #bc8952);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.2);
     transform: translateY(-1px);
 }

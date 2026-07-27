@@ -54,7 +54,7 @@ function displayPhoto() {
 
         const response = await fetch(image.url, { method: 'HEAD' });
         const fileSize = response.headers.get('content-length');
-        document.getElementById('photoFileSize').textContent = fileSize ? `${(fileSize / (1024 * 1024)).toFixed(3)} MB` : 'Unknown';
+        document.getElementById('photoFileSize').textContent = fileSize ? `${(fileSize / (1024 * 1024)).toFixed(1)} MB` : 'Unknown';
 
         document.getElementById('photoResolution').textContent = `${img.width}x${img.height}`;
         document.getElementById('photoDownloads').textContent = image.downloads || 0;
@@ -97,7 +97,7 @@ function displaySuggestions(currentImage) {
     similarImages.forEach(image => {
     const card = document.createElement('div');
     card.className = 'suggestion-card';
-    const thumbnailUrl = image.url.replace(/upload\/v\d+/, 'upload/w_200,h_150,q_69,c_thumb');
+    const thumbnailUrl = image.url.replace(/upload\/v\d+/, 'upload/w_200,h_150,q_79,c_thumb');
     const clean = cleanTitle(image.title);
     
     card.innerHTML = `
