@@ -26,9 +26,8 @@ exports.handler = async (event) => {
                     ]
                 }],
                 generationConfig: {
-                    maxOutputTokens: 800,
-                    responseMimeType: 'application/json',
-                    thinkingConfig: { thinkingBudget: 0 }
+                    maxOutputTokens: 2048,
+                    responseMimeType: 'application/json'
                 }
             })
         });
