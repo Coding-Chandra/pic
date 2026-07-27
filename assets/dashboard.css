@@ -440,7 +440,7 @@ body {
 .btn {
     padding: 0.6rem 1.1rem;
     border: none;
-    border-radius: 14px;
+    border-radius: 30px;
     font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
@@ -469,7 +469,7 @@ body {
 }
 
 .btn-secondary {
-    background: var(--glass-strong);
+    background: var(--glass);
     color: var(--text-primary);
     border: 1px solid var(--glass-border);
 }
@@ -500,20 +500,17 @@ body {
 .modal.hidden {
     display: none;
 }
-
 .modal-overlay {
     position: absolute;
     inset: 0;
-    background: rgba(6, 4, 12, 0.55);
-    backdrop-filter: blur(6px);
+    background: rgba(6, 4, 12, 0.65);
+    backdrop-filter: blur(2px);
 }
 
 .modal-content {
     position: relative;
-    background: rgba(24, 20, 34, 0.85);
-    backdrop-filter: blur(28px) saturate(160%);
-    -webkit-backdrop-filter: blur(28px) saturate(160%);
-    border: 1px solid var(--glass-border);
+    background: rgba(24, 20, 34, 0.7);
+    backdrop-filter: blur(18px) saturate(160%);
     border-radius: 22px;
     box-shadow: var(--shadow-lg);
     width: 90%;
@@ -567,7 +564,7 @@ body {
 }
 
 .modal-body {
-    padding: var(--spacing-xl);
+    padding: var(--spacing-lg);
     color: var(--text-secondary);
 }
 
@@ -586,9 +583,10 @@ body {
 
 .form-actions {
     display: flex;
-    gap: var(--spacing-md);
-    justify-content: flex-end;
-    margin-top: var(--spacing-lg);
+    /* gap: var(--spacing-md); */
+    justify-content: space-evenly;
+    margin-top: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
 }
 
 @media (max-width: 640px) {

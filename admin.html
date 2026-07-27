@@ -134,6 +134,11 @@
             box-shadow: 0 0 0 4px rgba(167,139,250,0.18);
         }
         textarea { resize: vertical; min-height: 90px; }
+        input.ai-typing, textarea.ai-typing {
+            border-color: rgba(167,139,250,0.6);
+            background: rgba(167,139,250,0.06);
+            box-shadow: 0 0 0 4px rgba(167,139,250,0.1);
+        }
 
         button {
             padding: 0.85rem;
@@ -322,6 +327,21 @@
     let previewBase64 = null;
     let previewMediaType = null;
 
+    const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+    async function typeText(el, text, targetMs) {
+        el.value = '';
+        if (!text) return;
+        el.classList.add('ai-typing');
+        el.focus();
+        const delay = Math.max(8, Math.min(35, targetMs / text.length));
+        for (const ch of text) {
+            el.value += ch;
+            await sleep(delay);
+        }
+        el.classList.remove('ai-typing');
+    }
+
     netlifyIdentity.on('init', user => { if (user) handleUserLogin(user); });
     netlifyIdentity.on('login', user => handleUserLogin(user));
     netlifyIdentity.on('logout', () => {
@@ -339,6 +359,22 @@
         document.getElementById('loginSection').style.display = 'none';
         document.getElementById('uploadSection').style.display = 'block';
         document.getElementById('dashboardLink').style.display = 'inline-block';
+    }
+
+    function typeText(el, text, speed = 16) {
+        return new Promise(resolve => {
+            el.value = '';
+            el.focus();
+            let i = 0;
+            (function step() {
+                if (i < text.length) {
+                    el.value += text[i++];
+                    setTimeout(step, speed);
+                } else {
+                    resolve();
+                }
+            })();
+        });
     }
 
     document.getElementById('photoUpload').addEventListener('change', function(event) {
@@ -378,8 +414,8 @@
             });
             const data = await res.json();
             if (!res.ok) throw new Error(data.error || 'AI generation failed');
-            document.getElementById('photoTitle').value = data.title || '';
-            document.getElementById('photoDescription').value = data.description || '';
+            await typeText(document.getElementById('photoTitle'), data.title || '', 450);
+            await typeText(document.getElementById('photoDescription'), data.description || '', 850);
         } catch (err) {
             showError('AI generation failed: ' + err.message);
         } finally {
