@@ -1,5 +1,4 @@
-// Netlify Function: /.netlify/functions/generate-caption
-// Set GEMINI_API_KEY in your Netlify site's environment variables.
+//Ai Generated Caption Generator for Images using Google Gemini API
 
 exports.handler = async (event) => {
     if (event.httpMethod !== 'POST') {
@@ -12,7 +11,7 @@ exports.handler = async (event) => {
             return { statusCode: 400, body: JSON.stringify({ error: 'Missing image data' }) };
         }
 
-        const model = 'gemini-2.5-flash'; // cost-efficient, vision-capable, current as of mid-2026
+        const model = 'gemini-flash-latest'; // auto-updating alias to Google's current Flash model, vision-capable
         const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${process.env.GEMINI_API_KEY}`;
 
         const response = await fetch(url, {
