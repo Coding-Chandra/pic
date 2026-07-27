@@ -1,4 +1,5 @@
-//Ai Generated Caption Generator for Images using Google Gemini API
+// Netlify Function: /.netlify/functions/generate-caption
+// Set GEMINI_API_KEY in your Netlify site's environment variables.
 
 exports.handler = async (event) => {
     if (event.httpMethod !== 'POST') {
@@ -24,7 +25,11 @@ exports.handler = async (event) => {
                         { inline_data: { mime_type: mediaType, data: image } }
                     ]
                 }],
-                generationConfig: { maxOutputTokens: 300, responseMimeType: 'application/json' }
+                generationConfig: {
+                    maxOutputTokens: 800,
+                    responseMimeType: 'application/json',
+                    thinkingConfig: { thinkingBudget: 0 }
+                }
             })
         });
 
@@ -40,7 +45,7 @@ exports.handler = async (event) => {
         try {
             parsed = JSON.parse(rawText);
         } catch {
-            return { statusCode: 502, body: JSON.stringify({ error: 'Could not parse AI response' }) };
+            return { statusCode: 502, body: JSON.stringify({ error: 'Could not parse AI response', raw: rawText.slice(0, 300) }) };
         }
 
         return {
