@@ -6,7 +6,7 @@
     <title>Picload - Photo Gallery</title>
     <link rel="shortcut icon" href="logo.png" type="image/x-icon">
     <link rel="apple-touch-icon" href="logo.png">
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./assets/main-style.css">
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
@@ -15,47 +15,135 @@
         <img src="logo.png" alt="Logo" class="preloader-logo">
     </div>
 
-    <header>
-        <div class="branding">
-            <span class="branding-text">PICLOAD</span>
-            <img src="logo.png" alt="Logo" class="branding-logo">
-        </div>
-        <input type="text" id="searchBar" class="search-bar" placeholder="🔍︎ Search by tags or keywords...">
-        <div id="authLinks">
-            <button class="admin-link" id="authButton">👤</button>
-        </div>
-    </header>
+    <div class="shell">
+        <aside class="sidebar">
+            <div class="sidebar-top">
+                <div class="branding">
+                    <span class="branding-text">Picload</span>
+                    <img src="logo.png" alt="Logo" class="branding-logo">
+                </div>
+                <div id="authLinks">
+                    <button class="admin-link" id="authButton" aria-label="Account">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21a8 8 0 0 0-16 0"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </button>
+                </div>
+            </div>
 
-    <div class="category-filter" id="categoryFilter"></div>
+            <div class="sidebar-search">
+                <input type="text" id="searchBar" class="search-bar" placeholder="Search by tag or keyword">
+            </div>
 
-    <div class="container">
-        <div class="controls">
-            <div class="sort-options">
-                <select id="sortSelect">
+            <nav class="category-filter" id="categoryFilter"></nav>
+
+            <div class="sidebar-sort">
+                <div class="custom-select" id="sortCustom">
+                    <button type="button" class="custom-select-trigger" id="sortTrigger" aria-haspopup="listbox" aria-expanded="false">
+                        <span id="sortTriggerLabel">New to Old</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </button>
+                    <ul class="custom-select-options" id="sortOptions" role="listbox">
+                        <li role="option" tabindex="0" data-value="new-to-old" class="selected">New to Old</li>
+                        <li role="option" tabindex="0" data-value="old-to-new">Old to New</li>
+                        <li role="option" tabindex="0" data-value="most-downloaded">Most Downloaded</li>
+                        <li role="option" tabindex="0" data-value="shuffled">Shuffled</li>
+                    </ul>
+                </div>
+                <select id="sortSelect" aria-hidden="true" tabindex="-1" style="display:none;">
                     <option value="new-to-old">New to Old</option>
                     <option value="old-to-new">Old to New</option>
                     <option value="most-downloaded">Most Downloaded</option>
                     <option value="shuffled">Shuffled</option>
                 </select>
             </div>
-        </div>
+        </aside>
 
-        <div class="loading" id="loadingMessage">Loading photos...</div>
-        <div class="error-message" id="errorMessage"></div>
-        <div class="gallery" id="photoGallery"></div>
-        <div class="empty-gallery" id="emptyGallery">
-              <img src="./assets/exclaim.png" style="height: 200px; width: 200px;">
-            <h2>No Photos Found</h2>
-            <p>Try adjusting your search or filters, or add images in the admin area.</p>
-        </div>
+        <main class="content">
+            <div class="loading" id="loadingMessage">Loading photos...</div>
+            <div class="error-message" id="errorMessage"></div>
+            <div class="gallery" id="photoGallery"></div>
+            <div class="empty-gallery" id="emptyGallery">
+                  <img src="./assets/exclaim.png" style="height: 160px; width: 160px;">
+                <h2>No photos found</h2>
+                <p>Try adjusting your search or filters, or add images in the admin area.</p>
+            </div>
 
-        <div class="pagination" id="pagination">
-            <button id="prevPage">←</button>
-            <span id="pageInfo"></span>
-            <button id="nextPage">→</button>
-        </div>
+            <div class="pagination" id="pagination">
+                <button id="prevPage">← Previous</button>
+                <span id="pageInfo"></span>
+                <button id="nextPage">Next →</button>
+            </div>
+        </main>
     </div>
 
     <script src="get-script.js"></script>
+    <script>
+        // Custom sort dropdown — proxies selection to the hidden native
+        // #sortSelect so get-script.js's existing change-event logic
+        // keeps working unmodified.
+        (function () {
+            const wrapper = document.getElementById('sortCustom');
+            const trigger = document.getElementById('sortTrigger');
+            const label = document.getElementById('sortTriggerLabel');
+            const list = document.getElementById('sortOptions');
+            const items = Array.from(list.querySelectorAll('li'));
+            const nativeSelect = document.getElementById('sortSelect');
+
+            function close() {
+                wrapper.classList.remove('open');
+                trigger.setAttribute('aria-expanded', 'false');
+            }
+            function open() {
+                wrapper.classList.add('open');
+                trigger.setAttribute('aria-expanded', 'true');
+            }
+            function selectItem(item) {
+                items.forEach(i => i.classList.remove('selected'));
+                item.classList.add('selected');
+                label.textContent = item.textContent;
+                nativeSelect.value = item.dataset.value;
+                nativeSelect.dispatchEvent(new Event('change'));
+            }
+
+            trigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                wrapper.classList.contains('open') ? close() : open();
+            });
+
+            trigger.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    open();
+                    items[0].focus();
+                }
+            });
+
+            items.forEach((item, idx) => {
+                item.addEventListener('click', () => { selectItem(item); close(); trigger.focus(); });
+                item.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        selectItem(item);
+                        close();
+                        trigger.focus();
+                    } else if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        (items[idx + 1] || items[0]).focus();
+                    } else if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        (items[idx - 1] || items[items.length - 1]).focus();
+                    } else if (e.key === 'Escape') {
+                        close();
+                        trigger.focus();
+                    }
+                });
+            });
+
+            document.addEventListener('click', close);
+            document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+        })();
+    </script>
 </body>
 </html>

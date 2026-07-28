@@ -21,18 +21,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const majorTags = ['Wallpaper', 'Nature', 'Travel', 'Architecture', 'Parks', 'Art', 'Food'];
 
     // Sync user state and update auth button
+    // Note: this no longer replaces the button's inner content (it holds an
+    // SVG icon in the current markup) — only the tooltip/label and click
+    // handler change, so the icon survives login/logout state changes.
     function syncUserState(user) {
         currentUser = user;
         if (user) {
             localStorage.setItem('netlifyUser', JSON.stringify({ id: user.id, email: user.email, role: user.app_metadata?.roles?.[0] }));
             const role = user.app_metadata?.roles?.includes('dashboard') ? 'Admin' : 'User';
-            authButton.textContent = role;
+            authButton.setAttribute('aria-label', role);
+            authButton.setAttribute('title', role);
             authButton.onclick = () => {
                 window.location.href = 'dashboard.html';
             };
         } else {
             localStorage.removeItem('netlifyUser');
-            authButton.textContent = '👤';
+            authButton.setAttribute('aria-label', 'Account');
+            authButton.setAttribute('title', 'Log in');
             authButton.onclick = () => {
                 netlifyIdentity.open();
             };
@@ -157,6 +162,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Fisher–Yates: the old `.sort(() => Math.random() - 0.5)` approach is a
+    // well-known broken shuffle — non-uniform and inconsistent across engines.
+    function shuffleArray(array) {
+        const result = [...array];
+        for (let i = result.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [result[i], result[j]] = [result[j], result[i]];
+        }
+        return result;
+    }
 
     function sortImages(images, sortBy) {
         const sorted = [...images];
@@ -164,11 +179,11 @@ document.addEventListener('DOMContentLoaded', () => {
             case 'new-to-old':
                 return sorted.sort((a, b) => new Date(b.date) - new Date(a.date));
             case 'old-to-new':
-                return sorted.sort((a, b) => new Date(a.date) - new Date(a.date));
+                return sorted.sort((a, b) => new Date(a.date) - new Date(b.date));
             case 'most-downloaded':
                 return sorted.sort((a, b) => (b.downloads || 0) - (a.downloads || 0));
             case 'shuffled':
-                return sorted.sort(() => Math.random() - 0.5);
+                return shuffleArray(sorted);
             default:
                 return sorted;
         }
@@ -242,7 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     searchBar.addEventListener('input', updateGallery);
     sortSelect.addEventListener('change', updateGallery);
-    
+
 
     // Initial Fetch
     fetchImages(currentUser ? currentUser.id : null);
