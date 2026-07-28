@@ -5,42 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Picload - Photo</title>
     <link rel="icon" type="image/x-icon" href="./logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./assets/photo.css">
-    <link href="https://fonts.googleapis.com/css2?family=Playwrite+VN:wght@100..400&family=Roboto:ital,wght@0,100..900;1,100..900&family=Rufina:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
-        <a href="index.html">Picload</a>
+        <a href="index.html" class="branding">Picload</a>
     </header>
-    
+
     <div class="container">
-        <div class="photo-details" id="photo Ascendant;photoDetails">
+        <div class="photo-details" id="photoDetails">
             <div class="image-wrapper">
                 <img id="photoImage" alt="">
             </div>
-            <h1 id="photoTitle"></h1>
-            <p><strong>Description:</strong> <span id="photoDescription"></span></p>
-            <p><strong>OG File Size:</strong> <span id="photoFileSize"></span></p>
-            <p><strong>OG Resolution:</strong> <span id="photoResolution"></span></p>
-            <p><strong>Downloads:</strong> <span id="photoDownloads"></span></p>
-            <div class="tags" id="photoTags"></div>
-            <select id="resolutionSelect" aria-placeholder="Select Resolution">
-                <div class="select-content">
-                    <option value="original">Original Resolution</option>
-                    <option value="2400">2400px (Max Width/Height)</option>
-                    <option value="1920">1920px (Max Width/Height)</option>
-                    <option value="640">640px (Max Width/Height)</option>
+
+            <div class="photo-main">
+                <h1 id="photoTitle"></h1>
+
+                <dl class="meta-list">
+                    <div class="meta-row">
+                        <dt>Description</dt>
+                        <dd id="photoDescription"></dd>
+                    </div>
+                    <div class="meta-row">
+                        <dt>Original size</dt>
+                        <dd id="photoFileSize"></dd>
+                    </div>
+                    <div class="meta-row">
+                        <dt>Original resolution</dt>
+                        <dd id="photoResolution"></dd>
+                    </div>
+                    <div class="meta-row">
+                        <dt>Downloads</dt>
+                        <dd id="photoDownloads"></dd>
+                    </div>
+                </dl>
+
+                <div class="tags" id="photoTags"></div>
+
+                <div class="download-controls">
+                    <select id="resolutionSelect" aria-label="Download resolution">
+                        <option value="original">Original Resolution</option>
+                        <option value="2400">2400px (Max Width/Height)</option>
+                        <option value="1920">1920px (Max Width/Height)</option>
+                        <option value="640">640px (Max Width/Height)</option>
+                    </select>
+                    <a class="download-btn" id="downloadBtn" role="button" aria-label="Download image">Download</a>
                 </div>
-            </select>
-            <a class="download-btn" id="downloadBtn" role="button" aria-label="Download image">Download</a>
+            </div>
         </div>
-        
+
         <div class="suggestions">
-            <h2>Similar Photos</h2>
+            <h2>Similar photos</h2>
             <div class="suggestions-grid" id="suggestionsGrid"></div>
         </div>
     </div>
-    
+
     <script src="assets/photo.js"></script>
 </body>
 </html>
