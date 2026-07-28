@@ -21,7 +21,7 @@ exports.handler = async (event) => {
             body: JSON.stringify({
                 contents: [{
                     parts: [
-                        { text: 'Look at this photo and respond with ONLY raw JSON, no markdown fences: {"title": "<catchy title, max 25 characters>", "description": "<engaging description, max 200 characters>"}' },
+                        { text: 'Look at this photo and respond with ONLY raw JSON, no markdown fences: {"title": "<catchy title, max 25 characters, no explicit, no harmfull, no vulgur, no dangerous words >", "description": "<engaging description, max 199 characters, no explicit, no harmfull, no vulgur, no dangerous words>"}' },
                         { inline_data: { mime_type: mediaType, data: image } }
                     ]
                 }],

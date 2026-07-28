@@ -92,6 +92,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: background 0.25s ease, transform 0.2s ease;
+            box-shadow: none;
         }
         #logoutBtn:hover { background: rgba(255,255,255,0.16); transform: translateY(-1px); }
 
@@ -155,7 +156,12 @@
         button:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(167,139,250,0.42); }
         button:disabled { background: rgba(255,255,255,0.06); color: var(--muted); box-shadow: none; cursor: not-allowed; transform: none; }
 
-        .preview-container { margin: 0.25rem 0; text-align: center; }
+        .preview-container{
+            margin: 0.25rem 0; 
+            display: flex;
+            justify-content: center;
+            text-align: center;
+        }
         #imagePreview {
             max-width: 100%;
             max-height: 280px;
@@ -291,7 +297,7 @@
         <!-- Upload Section -->
         <div class="admin-panel" id="uploadSection" style="display: none;">
             <h2>Upload New Photo</h2>
-            <p>Add an image, then let AI draft the title and description for you.</p>
+            <p>Add an image, then let AI draft the title and description for you. ~ optional</p>
 
             <div class="error-message" id="errorMessage"></div>
             <div class="success-message" id="successMessage">Photo uploaded successfully!</div>
@@ -301,9 +307,8 @@
 
                 <div class="preview-container">
                     <img id="imagePreview" alt="Image Preview">
-                    <button type="button" id="aiGenerateBtn" class="ai-btn" disabled>✨ Generate title &amp; description with AI</button>
                 </div>
-
+                <button type="button" id="aiGenerateBtn" class="ai-btn" disabled>✨ Generate title &amp; description with AI</button>  
                 <input type="text" id="photoTitle" placeholder="Photo Title" required maxlength="25">
                 <textarea id="photoDescription" placeholder="Photo Description (optional)" rows="3" maxlength="200"></textarea>
                 <input type="text" id="photoTags" placeholder="Tags (comma-separated, e.g., nature, sunset)" required>
@@ -361,7 +366,7 @@
         document.getElementById('dashboardLink').style.display = 'inline-block';
     }
 
-    function typeText(el, text, speed = 7) {
+    function typeText(el, text, speed = 3) {
         return new Promise(resolve => {
             el.value = '';
             el.focus();
