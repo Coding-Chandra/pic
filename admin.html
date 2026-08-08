@@ -79,7 +79,7 @@
         if (!text) return;
         el.classList.add('ai-typing');
         el.focus();
-        const delay = Math.max(8, Math.min(35, targetMs / text.length));
+        const delay = Math.max(2, Math.min(35, targetMs / text.length));
         for (const ch of text) {
             el.value += ch;
             await sleep(delay);
