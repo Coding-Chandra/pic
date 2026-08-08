@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="About Picpool — a sleek, modern platform for image sharing and management. Learn about our features, development status, roadmap, and more.">
+    <meta name="theme-color" content="#0b0a0f">
+    <title>About - Picpool</title>
+    <link rel="shortcut icon" href="logo.png" type="image/x-icon">
+    <link rel="apple-touch-icon" href="logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* Picload — about page. Shares the palette & design language of index.html. */
+        @import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&display=swap');
+
+        :root {
+            --bg: #0b0a0f;
+            --bg-raised: #121016;
+            --ink: #f2efe9;
+            --muted: #948d9c;
+            --muted-dim: #5f5866;
+            --hairline: rgba(242,239,233,0.1);
+            --hairline-soft: rgba(242,239,233,0.06);
+            --gold: #c9a24a;
+            --gold-dim: rgba(201,162,74,0.4);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { overflow-x: hidden; scroll-behavior: smooth; }
+
+        body {
+            font-family: "Geist", -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--ink);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { color: inherit; text-decoration: none; }
+
+        ::selection { background: var(--gold-dim); color: var(--ink); }
+
+        a:focus-visible,
+        button:focus-visible {
+            outline: 1px solid var(--gold);
+            outline-offset: 3px;
+        }
+
+        /* ===== Header ===== */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            background: var(--bg);
+            padding: 1.1rem 3rem;
+            border-bottom: 1px solid var(--hairline);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        header .branding {
+            font-family: 'Fraunces', serif;
+            font-style: italic;
+            font-optical-sizing: auto;
+            font-size: 1.5rem;
+            font-weight: 500;
+            letter-spacing: -0.3px;
+            color: var(--ink);
+            transition: opacity 0.2s ease;
+        }
+        header .branding::after { content: '.'; color: var(--gold); font-style: normal; }
+        header .branding:hover { opacity: 0.75; }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            list-style: none;
+        }
+        .nav-links a {
+            font-family: "Geist", sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--muted);
+            position: relative;
+            padding-bottom: 0.3rem;
+            transition: color 0.2s ease;
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 100%;
+            bottom: 0;
+            height: 1px;
+            background: var(--gold);
+            transition: right 0.25s ease;
+        }
+        .nav-links a:hover { color: var(--ink); }
+        .nav-links a:hover::after { right: 0; }
+        .nav-links .active { color: var(--ink); }
+        .nav-links .active::after { right: 0; }
+
+        /* ===== Layout ===== */
+        .container {
+            max-width: 920px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .section {
+            padding: 4.5rem 0;
+            border-bottom: 1px solid var(--hairline);
+            animation: fadeIn 0.6s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .eyebrow {
+            font-family: "Geist", sans-serif;
+            font-size: 0.78rem;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 0.75rem;
+        }
+
+        .section-title {
+            font-family: 'Fraunces', serif;
+            font-style: italic;
+            font-optical-sizing: auto;
+            font-size: 1.9rem;
+            font-weight: 500;
+            letter-spacing: -0.3px;
+            margin-bottom: 1.2rem;
+            color: var(--ink);
+        }
+
+        .lead {
+            font-size: 1.05rem;
+            color: var(--muted);
+            max-width: 60ch;
+        }
+
+        .section p {
+            color: var(--muted);
+            max-width: 60ch;
+        }
+
+        .section p strong { color: var(--ink); font-weight: 500; }
+
+        /* ===== Hero ===== */
+        .hero {
+            padding: 7rem 0 5rem;
+            border-bottom: 1px solid var(--hairline);
+        }
+        .hero .title {
+            font-family: 'Fraunces', serif;
+            font-style: italic;
+            font-optical-sizing: auto;
+            font-size: 3rem;
+            font-weight: 500;
+            letter-spacing: -0.6px;
+            line-height: 1.15;
+            margin-bottom: 1.4rem;
+        }
+        .hero .title span { color: var(--gold); font-style: italic; }
+        .hero .lead { font-size: 1.15rem; }
+
+        .wrap-link {
+            display: inline-block;
+            margin-top: 2rem;
+            font-family: "Geist", sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--ink);
+            padding-bottom: 0.35rem;
+            border-bottom: 1px solid var(--gold-dim);
+            transition: border-color 0.25s ease, color 0.2s ease;
+        }
+        .wrap-link:hover { border-color: var(--gold); }
+
+        /* ===== Features grid ===== */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 2.25rem 2.5rem;
+            margin-top: 1.5rem;
+        }
+        .feature h3 {
+            font-family: 'Fraunces', serif;
+            font-style: italic;
+            font-weight: 500;
+            font-size: 1.15rem;
+            margin-bottom: 0.4rem;
+            color: var(--ink);
+        }
+        .feature p { font-size: 0.92rem; }
+
+        /* ===== Status / timeline ===== */
+        .status-card {
+            background: var(--bg-raised);
+            border: 1px solid var(--hairline);
+            border-radius: 8px;
+            padding: 1.6rem 1.75rem;
+            margin-top: 1.5rem;
+            max-width: 60ch;
+        }
+        .status-card h3 {
+            font-family: 'Fraunces', serif;
+            font-style: italic;
+            font-weight: 500;
+            font-size: 1.2rem;
+            color: var(--ink);
+            margin-bottom: 0.6rem;
+        }
+        .status-card p { font-size: 0.92rem; }
+        .status-card .revival {
+            display: inline-block;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--gold);
+            padding-bottom: 0.25rem;
+            border-bottom: 1px solid var(--gold-dim);
+        }
+
+        .timeline {
+            list-style: none;
+            margin-top: 1.75rem;
+            border-top: 1px solid var(--hairline);
+        }
+        .timeline li {
+            display: flex;
+            gap: 1.25rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--hairline);
+        }
+        .timeline .tag {
+            flex-shrink: 0;
+            font-family: "Geist", sans-serif;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--gold);
+            padding-top: 0.25rem;
+        }
+        .timeline p { font-size: 0.94rem; }
+        .timeline p.dim { color: var(--muted); }
+
+.note {
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            color: var(--muted-dim);
+            max-width: 60ch;
+        }
+
+        .sub-heading {
+            font-family: 'Fraunces', serif;
+            font-style: italic;
+            font-weight: 500;
+            font-size: 1.15rem;
+            color: var(--ink);
+            margin: 1.6rem 0 0.5rem;
+        }
+
+        .inline-email {
+            color: var(--gold);
+            border-bottom: 1px solid var(--gold-dim);
+            transition: border-color 0.2s ease, color 0.2s ease;
+        }
+        .inline-email:hover { border-color: var(--gold); }
+
+        /* ===== Contact ===== */
+        .contact-email {
+            display: inline-block;
+            margin-top: 0.5rem;
+            font-family: 'Fraunces', serif;
+            font-style: italic;
+            font-size: 1.3rem;
+            color: var(--ink);
+            border-bottom: 1px solid var(--gold-dim);
+            padding-bottom: 0.2rem;
+            transition: border-color 0.2s ease, color 0.2s ease;
+        }
+        .contact-email:hover { border-color: var(--gold); transform: translateY(-1px); }
+        .contact-email:active { transform: translateY(0); }
+
+        /* ===== Footer ===== */
+        footer {
+            padding: 2.5rem 2rem;
+            text-align: center;
+            border-top: 1px solid var(--hairline-soft);
+        }
+        footer p {
+            font-family: "Geist", sans-serif;
+            font-size: 0.8rem;
+            color: var(--muted-dim);
+        }
+
+        /* ===== Mobile ===== */
+        @media (max-width: 720px) {
+            header { padding: 0.95rem 1.2rem; }
+            .nav-links { gap: 1.25rem; }
+            .container { padding: 0 1.2rem; }
+
+            .hero { padding: 4.5rem 0 3.5rem; }
+            .hero .title { font-size: 2.2rem; }
+
+            .section { padding: 3.5rem 0; }
+            .section-title { font-size: 1.6rem; }
+        }
+
+        @media (max-width: 420px) {
+            .nav-links { gap: 0.9rem; }
+            .nav-links a { font-size: 0.8rem; }
+            .hero .title { font-size: 1.9rem; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.001ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.001ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="index.html" class="branding">Picpool</a>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="index.html">Gallery</a></li>
+                <li><a href="about.html" class="active">About</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero -->
+        <section class="hero">
+            <div class="container">
+                <div class="eyebrow">About Picpool</div>
+                <h1 class="title">A sleek, modern platform for <span>image sharing &amp; management.</span></h1>
+                <p class="lead">
+                    Picpool helps you upload, organize, and share images with ease — a refined gallery
+                    where the photographs do the talking and nothing gets in the way.
+                </p>
+                <a href="index.html" class="wrap-link">Explore the gallery →</a>
+            </div>
+        </section>
+
+        <!-- What is Picpool -->
+        <section class="section">
+            <div class="container">
+                <div class="eyebrow">The Platform</div>
+                <h2 class="section-title">What is Picpool?</h2>
+                <p>
+                    Picpool (formerly Picload) is a web application built for image lovers who want a
+                    clean, distraction-free way to display and share their work. During active development
+                    the platform was hosted at
+                    <strong>picload.netlify.app</strong>, showcasing a responsive gallery, per-photo detail
+                    pages, and a focused set of organization tools.
+                </p>
+            </div>
+        </section>
+
+        <!-- Features -->
+        <section class="section">
+            <div class="container">
+                <div class="eyebrow">What it does</div>
+                <h2 class="section-title">Features</h2>
+                <div class="features">
+                    <div class="feature">
+                        <h3>Seamless sharing</h3>
+                        <p>Upload, organize, and share images with a modern, minimal interface.</p>
+                    </div>
+                    <div class="feature">
+                        <h3>Responsive gallery</h3>
+                        <p>A beautiful, adaptive gallery view that looks great on any screen.</p>
+                    </div>
+                    <div class="feature">
+                        <h3>Mobile-friendly</h3>
+                        <p>Browsing and management tuned for touch, wherever you are.</p>
+                    </div>
+                    <div class="feature">
+                        <h3>Smart organization</h3>
+                        <p>Tagging, search, sorting, and categories help keep every photo findable.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+<!-- Development status -->
+        <section class="section">
+            <div class="container">
+                <div class="eyebrow">Current state</div>
+                <h2 class="section-title">Development Status</h2>
+                <div class="status-card">
+                    <h3>🎉 Picpool v2 — the revival is here</h3>
+                    <p>
+                        Picpool is back and bigger than ever. Now on <strong>version 2</strong>, the
+                        platform has been completely reimagined and is once again in active development.
+                        Building on everything from the original release, v2 brings a refined direction,
+                        fresh momentum, and a whole new chapter for the platform.
+                    </p>
+                    <span class="revival">Status: Active · Version 2</span>
+                </div>
+                <p class="note">
+                    Thank you for your patience and continued support. The gallery is live, new features
+                    are being built, and there's plenty more to come.
+                </p>
+            </div>
+        </section>
+
+        <!-- What's new -->
+        <section class="section">
+            <div class="container">
+                <div class="eyebrow">Fresh off the press</div>
+                <h2 class="section-title">What's new in v2</h2>
+                <ul class="timeline">
+                    <li>
+                        <span class="tag">v2.0</span>
+                        <p>Full platform revival — a reimagined Picpool with a renewed direction.</p>
+                    </li>
+                    <li>
+                        <span class="tag">About</span>
+                        <p>New about page and top navigation across the gallery for a clearer, more connected experience.</p>
+                    </li>
+                    <li>
+                        <span class="tag">Roadmap</span>
+                        <p>Fresh roadmap for v2 focused on user accounts and multi-user uploads.</p>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Roadmap -->
+        <section class="section">
+            <div class="container">
+                <div class="eyebrow">Looking ahead</div>
+                <h2 class="section-title">Roadmap</h2>
+                <ul class="timeline">
+                    <li>
+                        <span class="tag">v1.25</span>
+                        <p>Original release — upload &amp; management (admin only), responsive gallery, sharing.</p>
+                    </li>
+                    <li>
+                        <span class="tag">v2.0</span>
+                        <p>Current — the revival. Refined platform, new navigation, and a renewed direction.</p>
+                    </li>
+                    <li>
+                        <span class="tag">In progress</span>
+                        <p>Public user registration and a full account management system.</p>
+                    </li>
+                    <li>
+                        <span class="tag">v2.1</span>
+                        <p>Multi-user upload capabilities and enhanced gallery organization tools.</p>
+                    </li>
+                    <li>
+                        <span class="tag">v2.5</span>
+                        <p>Community features — collections, likes, and richer sharing experiences.</p>
+                    </li>
+                </ul>
+                <p class="note">These features are subject to revision as development progresses.</p>
+            </div>
+        </section>
+
+<!-- Contributing -->
+        <section class="section">
+            <div class="container">
+                <div class="eyebrow">Get involved</div>
+                <h2 class="section-title">Contributing &amp; Team Opportunities</h2>
+                <p>
+                    Picpool is built on community and collaboration. If you're interested in supporting
+                    the platform through photography, curation, or platform stewardship, we'd love to
+                    hear from you. Contributions are accepted on a rolling basis and remain open
+                    throughout our active development phase.
+                </p>
+
+                <h3 class="sub-heading">Photo submissions</h3>
+                <p>
+                    We welcome image submissions from the community. Please include a photo title, a
+                    brief description, and your preferred credit information. All contributors are
+                    credited within the image descriptions on the platform.
+                </p>
+
+                <h3 class="sub-heading">Administrator applications</h3>
+                <p>
+                    Are you interested in a more involved role within the Picpool ecosystem? We are
+                    currently accepting applications for administrator positions. To apply, please
+                    submit your application to our official correspondence channel at
+                    <a href="mailto:picload2@gmail.com" class="inline-email">picload2@gmail.com</a>,
+                    outlining your relevant experience, areas of interest, and proposed contributions
+                    to the platform.
+                </p>
+                <p class="note">
+                    We review all applications carefully and will respond to qualified candidates as
+                    opportunities become available.
+                </p>
+            </div>
+        </section>
+
+        <!-- License -->
+        <section class="section">
+            <div class="container">
+                <div class="eyebrow">Terms</div>
+                <h2 class="section-title">License</h2>
+                <p>
+                    All rights reserved. This is a public project from <strong>Tue 24 Feb, 2026</strong>.
+                </p>
+            </div>
+        </section>
+
+        <!-- Contact -->
+        <section class="section">
+            <div class="container">
+                <div>
+                    <div class="eyebrow">Contact</div>
+                    <h2 class="section-title">Get in touch</h2>
+                    <p>Questions about the project status or future developments?</p>
+                    <a href="mailto:picload2@gmail.com" class="contact-email">picload2@gmail.com</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© Picpool — a sleek, modern platform for image sharing and management.</p>
+    </footer>
+</body>
+</html>
+

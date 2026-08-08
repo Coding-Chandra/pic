@@ -5,6 +5,7 @@
  * - body scroll lock + image.onload handling
  * - stable modal (zoom, pan, pinch, swipe, keyboard)
  * - fixed delete flow
+ * - paginated grid (6 photos/page) with animated page transitions
  */
 
 class PICLOADDashboard {
@@ -12,6 +13,11 @@ class PICLOADDashboard {
         this.currentUser = null;
         this.photos = [];
         this.selectedPhotoId = null;
+
+        // Pagination state
+        this.itemsPerPage = 6;
+        this.currentPage = 1;
+
         this.init();
     }
 
@@ -65,6 +71,7 @@ class PICLOADDashboard {
         this.photoList = document.getElementById('photoList');
         this.emptyState = document.getElementById('emptyState');
         this.loadingState = document.getElementById('loadingState');
+        this.paginationContainer = document.getElementById('paginationContainer');
 
         this.editModal = document.getElementById('editModal');
         this.editForm = document.getElementById('editForm');
@@ -122,6 +129,7 @@ class PICLOADDashboard {
             this.loadingState.classList.remove('hidden');
             this.photoList.classList.add('hidden');
             this.emptyState.classList.add('hidden');
+            if (this.paginationContainer) this.paginationContainer.classList.add('hidden');
 
             const userEmail = encodeURIComponent(this.currentUser.email);
             const response = await fetch(
@@ -134,6 +142,7 @@ class PICLOADDashboard {
 
             const data = await response.json();
             this.photos = Array.isArray(data.images) ? data.images : [];
+            this.currentPage = 1;
 
             console.log(`Loaded ${this.photos.length} photos for ${this.currentUser.email}`);
 
@@ -153,18 +162,41 @@ class PICLOADDashboard {
     }
 
     displayPhotos() {
-        // If no photos, hide grid
+        // If no photos, hide grid + pagination
         if (!Array.isArray(this.photos) || this.photos.length === 0) {
             this.photoList.classList.add('hidden');
             this.emptyState.classList.remove('hidden');
+            if (this.paginationContainer) {
+                this.paginationContainer.classList.add('hidden');
+                this.paginationContainer.innerHTML = '';
+            }
             return;
         }
 
         this.photoList.classList.remove('hidden');
         this.emptyState.classList.add('hidden');
 
-        this.photoList.innerHTML = this.photos.map((photo, idx) => `
-            <div class="photo-card" data-id="${this.escapeHtml(photo.id)}" data-index="${idx}">
+        this._renderPage();
+    }
+
+    // Renders only the photos belonging to the current page (no animation —
+    // used for initial load / after edit / after delete). Page navigation
+    // goes through goToPage(), which wraps this with a transition.
+    _renderPage() {
+        const totalPages = Math.max(1, Math.ceil(this.photos.length / this.itemsPerPage));
+        if (this.currentPage > totalPages) this.currentPage = totalPages;
+        if (this.currentPage < 1) this.currentPage = 1;
+
+        const startIdx = (this.currentPage - 1) * this.itemsPerPage;
+        const pagePhotos = this.photos.slice(startIdx, startIdx + this.itemsPerPage);
+
+        this.photoList.innerHTML = pagePhotos.map((photo, i) => {
+            // idx is the photo's index in the FULL photos array so the
+            // fullscreen modal can still page through every photo, not
+            // just the ones on the current page.
+            const idx = startIdx + i;
+            return `
+            <div class="photo-card pop-in" style="animation-delay:${i * 45}ms" data-id="${this.escapeHtml(photo.id)}" data-index="${idx}">
                 <div class="photo-image-wrapper">
                     <img src="${this.escapeHtml(photo.url)}" alt="${this.escapeHtml(photo.title)}" loading="lazy">
                 </div>
@@ -184,7 +216,8 @@ class PICLOADDashboard {
                     </button>
                 </div>
             </div>
-        `).join('');
+        `;
+        }).join('');
 
         // Edit
         this.photoList.querySelectorAll('.btn-edit').forEach(btn => {
@@ -202,13 +235,119 @@ class PICLOADDashboard {
             });
         });
 
-        // View -> modal by index
+        // View -> modal by global index (spans all pages)
         this.photoList.querySelectorAll('.btn-view').forEach(btn => {
             btn.addEventListener('click', () => {
                 const idx = Number(btn.dataset.index);
                 this.openImageModalByIndex(idx);
             });
         });
+
+        this.renderPaginationControls(totalPages, startIdx);
+    }
+
+    renderPaginationControls(totalPages, startIdx) {
+        if (!this.paginationContainer) return;
+
+        if (totalPages <= 1) {
+            this.paginationContainer.classList.add('hidden');
+            this.paginationContainer.innerHTML = '';
+            return;
+        }
+
+        this.paginationContainer.classList.remove('hidden');
+
+        const rangeStart = startIdx + 1;
+        const rangeEnd = Math.min(startIdx + this.itemsPerPage, this.photos.length);
+        const pageNumbers = this._getPaginationRange(this.currentPage, totalPages);
+
+        const pagesHtml = pageNumbers.map(p => {
+            if (p === '...') return `<span class="pagination-ellipsis">&hellip;</span>`;
+            return `<button class="pagination-page-btn ${p === this.currentPage ? 'active' : ''}" data-page="${p}">${p}</button>`;
+        }).join('');
+
+        this.paginationContainer.innerHTML = `
+            <div class="pagination-info">${rangeStart}&ndash;${rangeEnd} of ${this.photos.length} photos</div>
+            <div class="pagination-controls">
+                <button class="pagination-nav-btn" id="paginationPrev" ${this.currentPage <= 1 ? 'disabled' : ''} aria-label="Previous page">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="pagination-pages">${pagesHtml}</div>
+                <button class="pagination-nav-btn" id="paginationNext" ${this.currentPage >= totalPages ? 'disabled' : ''} aria-label="Next page">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        `;
+
+        document.getElementById('paginationPrev').addEventListener('click', () => this.goToPage(this.currentPage - 1));
+        document.getElementById('paginationNext').addEventListener('click', () => this.goToPage(this.currentPage + 1));
+        this.paginationContainer.querySelectorAll('.pagination-page-btn').forEach(btn => {
+            btn.addEventListener('click', () => this.goToPage(Number(btn.dataset.page)));
+        });
+    }
+
+    // Builds a compact page list with ellipses, e.g. [1, '...', 4, 5, 6, '...', 12]
+    _getPaginationRange(current, total) {
+        const delta = 1;
+        const range = [];
+        const rangeWithDots = [];
+        let last = null;
+
+        for (let i = 1; i <= total; i++) {
+            if (i === 1 || i === total || (i >= current - delta && i <= current + delta)) {
+                range.push(i);
+            }
+        }
+
+        range.forEach(i => {
+            if (last !== null) {
+                if (i - last === 2) {
+                    rangeWithDots.push(last + 1);
+                } else if (i - last !== 1) {
+                    rangeWithDots.push('...');
+                }
+            }
+            rangeWithDots.push(i);
+            last = i;
+        });
+
+        return rangeWithDots;
+    }
+
+    goToPage(newPage) {
+        const totalPages = Math.max(1, Math.ceil(this.photos.length / this.itemsPerPage));
+        newPage = Math.min(totalPages, Math.max(1, newPage));
+        if (newPage === this.currentPage) return;
+
+        const direction = newPage > this.currentPage ? 'forward' : 'back';
+        this.currentPage = newPage;
+        this._animatePageChange(direction);
+    }
+
+    // Slides the current page out, swaps the grid content, then slides
+    // the new page in. Direction controls which way things travel so
+    // "Next" feels like moving forward and "Prev" feels like moving back.
+    _animatePageChange(direction) {
+        if (!this.photoList) return;
+
+        const exitX = direction === 'forward' ? '-30px' : '30px';
+        const enterX = direction === 'forward' ? '30px' : '-30px';
+
+        this.photoList.style.setProperty('--exit-x', exitX);
+        this.photoList.style.setProperty('--enter-x', enterX);
+
+        this.photoList.classList.remove('page-enter');
+        this.photoList.classList.add('page-exit');
+
+        this.photoList.addEventListener('animationend', () => {
+            this.photoList.classList.remove('page-exit');
+            this._renderPage();
+
+            this.photoList.classList.add('page-enter');
+            this.photoList.addEventListener('animationend', () => {
+                this.photoList.classList.remove('page-enter');
+            }, { once: true });
+        }, { once: true });
     }
 
     openEditModal(photoId) {
