@@ -15,7 +15,7 @@ async function loadImages() {
     } catch (error) {
         console.error('Error loading images:', error);
         document.getElementById('photoDetails').innerHTML = `
-            <p>Error: ${error.message}. <a href="index.html">Return to homepage</a></p>
+            <p>Error: ${error.message}. <a href="./index.html">Return to homepage</a></p>
         `;
     }
 }
@@ -37,7 +37,7 @@ function displayPhoto() {
 
     if (!image) {
         document.getElementById('photoDetails').innerHTML = `
-            <p>Photo not found. <a href="index.html">Return to homepage</a></p>
+            <p>Photo not found. <a href="./index.html">Return to homepage</a></p>
         `;
         return;
     }
@@ -81,7 +81,7 @@ function displayPhoto() {
     };
     img.onerror = () => {
         document.getElementById('photoDetails').innerHTML = `
-            <p>Error loading image. <a href="index.html">Return to homepage</a></p>
+            <p>Error loading image. <a href="./index.html">Return to homepage</a></p>
         `;
     };
 }
@@ -106,7 +106,7 @@ function displaySuggestions(currentImage) {
     `;
     
     card.addEventListener('click', () => {
-        window.location.href = `photo.html?id=${encodeURIComponent(image.id)}`;
+        window.location.href = `./photo.html?id=${encodeURIComponent(image.id)}`;
     });
 
     suggestionsGrid.appendChild(card);

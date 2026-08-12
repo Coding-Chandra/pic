@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
             authButton.setAttribute('aria-label', role);
             authButton.setAttribute('title', role);
             authButton.onclick = () => {
-                window.location.href = 'dashboard.html';
+                window.location.href = './dashboard.html';
             };
         } else {
             localStorage.removeItem('netlifyUser');
@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const displayTitle = formatTitle(image.title);
             const thumbnailUrl = image.url.replace(/upload\/v\d+/, 'upload/w_600,h_500,q_90,c_thumb');
             return `
-                <div class="photo-card" onclick="window.location.href='photo.html?id=${encodeURIComponent(image.id)}'">
+                <div class="photo-card" onclick="window.location.href='./photo.html?id=${encodeURIComponent(image.id)}'">
                     <div class="image-wrapper">
                         <img src="${thumbnailUrl}" alt="${displayTitle}" loading="lazy">
                     </div>

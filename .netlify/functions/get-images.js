@@ -6,6 +6,22 @@ cloudinary.config({
   api_secret: process.env.API_SECRET,
 });
 
+// Same defensive decode used in upload-images.js. Cloudinary itself never
+// introduces %-encoding into context values (confirmed against the SDK
+// source) — so if we see %XX sequences here, they were already baked into
+// storage by an upstream bug. This unwinds them at read time so display
+// and search both work correctly, independent of whether/when the write
+// path gets fixed or old assets get migrated.
+const cleanText = (value) => {
+  if (typeof value !== 'string') return value;
+  if (!/%[0-9A-Fa-f]{2}/.test(value)) return value;
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return value;
+  }
+};
+
 exports.handler = async (event) => {
   try {
     console.log('Cloudinary config:', {
@@ -37,33 +53,31 @@ exports.handler = async (event) => {
       next_cursor: nextCursor,
     });
 
-    console.log('Raw Cloudinary result:', JSON.stringify(result, null, 2));
-
     if (!Array.isArray(result.resources)) {
       throw new Error(`Cloudinary response.resources is not an array: ${JSON.stringify(result)}`);
     }
 
     const images = result.resources.map((resource) => {
-      console.log('Processing resource:', resource.public_id);
+      const rawTags = resource.tags && resource.tags.length > 0
+        ? resource.tags
+        : (resource.context?.custom?.tags ? resource.context.custom.tags.split(',') : []);
+
       return {
         id: resource.public_id,
         url: resource.secure_url,
-        title: resource.context?.custom?.alt || resource.public_id.split('/').pop(),
-        description: resource.context?.custom?.description || '',
-        tags: resource.tags && resource.tags.length > 0 
-          ? resource.tags 
-          : (resource.context?.custom?.tags ? resource.context.custom.tags.split(',') : []),
+        title: cleanText(resource.context?.custom?.alt) || resource.public_id.split('/').pop(),
+        description: cleanText(resource.context?.custom?.description) || '',
+        tags: rawTags.map(cleanText),
         date: resource.context?.custom?.date || resource.created_at,
         downloads: parseInt(resource.context?.custom?.downloads) || 0,
       };
     });
 
     console.log('Final images array length:', images.length);
-    console.log('Response being sent:', JSON.stringify({ images, next_cursor: result.next_cursor || null }, null, 2));
 
     return {
       statusCode: 200,
-      headers: { 
+      headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
       },
@@ -82,12 +96,12 @@ exports.handler = async (event) => {
     });
     return {
       statusCode: 500,
-      headers: { 
+      headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
       },
-      body: JSON.stringify({ 
-        error: 'Failed to fetch images', 
+      body: JSON.stringify({
+        error: 'Failed to fetch images',
         details: error.message || 'Unknown error',
         http_code: error.http_code || 'N/A',
       }),

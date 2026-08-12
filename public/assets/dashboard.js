@@ -510,7 +510,7 @@ class PICLOADDashboard {
     logout() {
         netlifyIdentity.logout();
         setTimeout(() => {
-            window.location.href = 'index.html';
+            window.location.href = './index.html';
         }, 500);
     }
 

@@ -17,7 +17,7 @@
     <div class="blob b3"></div>
 
     <header>
-        <div class="branding"><a href="/">Picpool</a></div>
+        <div class="branding"><a href="./index.html">Picpool</a></div>
         <div class="header-right">
             <div class="user-info" id="userInfo" style="display: none;">
                 <span id="userEmail"></span>
@@ -62,8 +62,8 @@
         </div>
 
         <div class="back-link">
-            <a href="index.html"><i class="fa-regular fa-square-caret-left"></i> Back to Gallery</a>
-            <a href="dashboard.html" id="dashboardLink" style="display: none;"><i class="fa-solid fa-user"></i> My Dashboard</a>
+            <a href="./index.html"><i class="fa-regular fa-square-caret-left"></i> Back to Gallery</a>
+            <a href="./dashboard.html" id="dashboardLink" style="display: none;"><i class="fa-solid fa-user"></i> Back to  Dashboard</a>
         </div>
     </div>
 
@@ -74,12 +74,16 @@
 
     const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
+    // NOTE: this used to be defined twice — a second, later declaration
+    // (speed-per-character, no ai-typing class) was silently overwriting
+    // this one via hoisting, which is why the AI-generated text was typing
+    // out far slower than intended and never got the ai-typing visual state.
     async function typeText(el, text, targetMs) {
         el.value = '';
         if (!text) return;
         el.classList.add('ai-typing');
         el.focus();
-        const delay = Math.max(2, Math.min(35, targetMs / text.length));
+        const delay = Math.max(1, Math.min(35, targetMs / text.length));
         for (const ch of text) {
             el.value += ch;
             await sleep(delay);
@@ -104,22 +108,6 @@
         document.getElementById('loginSection').style.display = 'none';
         document.getElementById('uploadSection').style.display = 'block';
         document.getElementById('dashboardLink').style.display = 'inline-block';
-    }
-
-    function typeText(el, text, speed = 3) {
-        return new Promise(resolve => {
-            el.value = '';
-            el.focus();
-            let i = 0;
-            (function step() {
-                if (i < text.length) {
-                    el.value += text[i++];
-                    setTimeout(step, speed);
-                } else {
-                    resolve();
-                }
-            })();
-        });
     }
 
     document.getElementById('photoUpload').addEventListener('change', function(event) {
@@ -169,6 +157,46 @@
             btn.innerHTML = originalLabel;
         }
     });
+
+    // Cloudinary's context format uses `|` to separate key=value pairs and
+    // `=` inside each pair — those are the only two characters that need
+    // escaping. Nothing here should be URL-encoded: nothing downstream
+    // (get-images.js, the gallery) ever decodes it back, so encoding here
+    // just permanently corrupts the stored text (this was the source of
+    // the "%20 instead of spaces" bug).
+    function escapeContextValue(value) {
+        return String(value ?? '').replace(/([=|])/g, '\\$&');
+    }
+
+    // Cloudinary hard-caps context at 255 characters total. With a 25-char
+    // title, a 200-char description, plus email/user_id/user_name, the
+    // combined string can comfortably exceed that — so trim the
+    // description (least likely field to matter if shortened) rather than
+    // let the upload fail or get silently mangled.
+    const CONTEXT_CHAR_LIMIT = 250;
+
+    function buildContextString(title, description, userEmail, userId, userName) {
+        const parts = {
+            alt: title,
+            description: description || '',
+            user_email: userEmail,
+            user_id: userId || '',
+            user_name: userName,
+        };
+
+        const toString = () => Object.entries(parts)
+            .map(([key, value]) => `${key}=${escapeContextValue(value)}`)
+            .join('|');
+
+        let contextStr = toString();
+        if (contextStr.length > CONTEXT_CHAR_LIMIT) {
+            const overflow = contextStr.length - CONTEXT_CHAR_LIMIT;
+            const keepLength = Math.max(0, parts.description.length - overflow - 1);
+            parts.description = parts.description.slice(0, keepLength) + '…';
+            contextStr = toString();
+        }
+        return contextStr;
+    }
 
     document.getElementById('uploadForm').addEventListener('submit', async function(event) {
         event.preventDefault();
@@ -226,14 +254,7 @@
             const allTags = [...tags, `user-${userTag}`, `owner-${userEmail}`];
             formData.append('tags', allTags.join(','));
 
-            const ctxParts = [
-                `alt=${encodeURIComponent(title)}`,
-                `description=${encodeURIComponent(description || '')}`,
-                `user_email=${encodeURIComponent(userEmail)}`,
-                `user_id=${encodeURIComponent(currentUser.id || '')}`,
-                `user_name=${encodeURIComponent(userName)}`
-            ];
-            formData.append('context', ctxParts.join('|'));
+            formData.append('context', buildContextString(title, description, userEmail, currentUser.id, userName));
 
             let progress = 0;
             const interval = setInterval(() => {
