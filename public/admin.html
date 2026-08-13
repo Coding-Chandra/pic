@@ -63,7 +63,7 @@
 
         <div class="back-link">
             <a href="./index.html"><i class="fa-regular fa-square-caret-left"></i> Back to Gallery</a>
-            <a href="./dashboard.html" id="dashboardLink" style="display: none;"><i class="fa-solid fa-user"></i> My Dashboard</a>
+            <a href="./dashboard.html" id="dashboardLink" style="display: none;"><i class="fa-solid fa-user"></i> Back to  Dashboard</a>
         </div>
     </div>
 
@@ -79,7 +79,7 @@
         if (!text) return;
         el.classList.add('ai-typing');
         el.focus();
-        const delay = Math.max(8, Math.min(35, targetMs / text.length));
+        const delay = Math.max(1.75, Math.min(35, targetMs / text.length));
         for (const ch of text) {
             el.value += ch;
             await sleep(delay);
@@ -104,22 +104,6 @@
         document.getElementById('loginSection').style.display = 'none';
         document.getElementById('uploadSection').style.display = 'block';
         document.getElementById('dashboardLink').style.display = 'inline-block';
-    }
-
-    function typeText(el, text, speed = 3) {
-        return new Promise(resolve => {
-            el.value = '';
-            el.focus();
-            let i = 0;
-            (function step() {
-                if (i < text.length) {
-                    el.value += text[i++];
-                    setTimeout(step, speed);
-                } else {
-                    resolve();
-                }
-            })();
-        });
     }
 
     document.getElementById('photoUpload').addEventListener('change', function(event) {
@@ -170,6 +154,35 @@
         }
     });
 
+    function escapeContextValue(value) {
+        return String(value ?? '').replace(/([=|])/g, '\\$&');
+    }
+
+    const CONTEXT_CHAR_LIMIT = 250;
+
+    function buildContextString(title, description, userEmail, userId, userName) {
+        const parts = {
+            alt: title,
+            description: description || '',
+            user_email: userEmail,
+            user_id: userId || '',
+            user_name: userName,
+        };
+
+        const toString = () => Object.entries(parts)
+            .map(([key, value]) => `${key}=${escapeContextValue(value)}`)
+            .join('|');
+
+        let contextStr = toString();
+        if (contextStr.length > CONTEXT_CHAR_LIMIT) {
+            const overflow = contextStr.length - CONTEXT_CHAR_LIMIT;
+            const keepLength = Math.max(0, parts.description.length - overflow - 1);
+            parts.description = parts.description.slice(0, keepLength) + '…';
+            contextStr = toString();
+        }
+        return contextStr;
+    }
+
     document.getElementById('uploadForm').addEventListener('submit', async function(event) {
         event.preventDefault();
         if (!currentUser) {
@@ -195,9 +208,9 @@
             return;
         }
 
-        const validTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+        const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
         if (!validTypes.includes(file.type)) {
-            showError('File must be an image (JPG, PNG, WebP, or GIF)');
+            showError('File must be an image (JPG, PNG, or WebP)');
             return;
         }
 
@@ -226,14 +239,7 @@
             const allTags = [...tags, `user-${userTag}`, `owner-${userEmail}`];
             formData.append('tags', allTags.join(','));
 
-            const ctxParts = [
-                `alt=${encodeURIComponent(title)}`,
-                `description=${encodeURIComponent(description || '')}`,
-                `user_email=${encodeURIComponent(userEmail)}`,
-                `user_id=${encodeURIComponent(currentUser.id || '')}`,
-                `user_name=${encodeURIComponent(userName)}`
-            ];
-            formData.append('context', ctxParts.join('|'));
+            formData.append('context', buildContextString(title, description, userEmail, currentUser.id, userName));
 
             let progress = 0;
             const interval = setInterval(() => {

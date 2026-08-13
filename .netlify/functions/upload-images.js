@@ -12,7 +12,7 @@ cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
   api_key: process.env.API_KEY,
   api_secret: process.env.API_SECRET,
-  max_image_file_size: 20971520, // 20MB limit (adjust as needed)
+  max_image_file_size: 10 * 1024 * 1024 // 10MB limit (adjust as needed)
 });
 console.log('Cloudinary config:', {
   cloud_name: config.cloud_name || 'MISSING',
