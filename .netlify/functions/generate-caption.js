@@ -16,41 +16,22 @@ exports.handler = async (event) => {
         const model = 'gemini-flash-latest'; // auto-updating alias to Google's current Flash model, vision-capable
         const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${process.env.GEMINI_API_KEY}`;
 
-        // Netlify's synchronous functions have their own hard execution
-        // ceiling regardless of what we do here — if that fires first, the
-        // client just gets a truncated/empty response (the exact bug we
-        // just chased down). This AbortController fires well before that,
-        // so a slow Gemini call fails with a real JSON error body instead.
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 8000);
-
-        let response;
-        try {
-            response = await fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: [{
-                        parts: [
-                            { text: 'Look at this photo and respond with ONLY raw JSON, no markdown fences: {"title": "<catchy title, max 25 characters, no explicit, no harmfull, no vulgur, no dangerous words >", "description": "<engaging description, max 150 characters, no explicit, no harmfull, no vulgur, no dangerous words>"}' },
-                            { inline_data: { mime_type: mediaType, data: image } }
-                        ]
-                    }],
-                    generationConfig: {
-                        maxOutputTokens: 2048,
-                        responseMimeType: 'application/json'
-                    }
-                }),
-                signal: controller.signal,
-            });
-        } catch (fetchErr) {
-            if (fetchErr.name === 'AbortError') {
-                return { statusCode: 504, body: JSON.stringify({ error: 'AI generation timed out — try again or use a smaller image' }) };
-            }
-            throw fetchErr;
-        } finally {
-            clearTimeout(timeoutId);
-        }
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{
+                    parts: [
+                        { text: 'Look at this photo and respond with ONLY raw JSON, no markdown fences: {"title": "<catchy title, max 25 characters, no explicit, no harmfull, no vulgur, no dangerous words >", "description": "<engaging description, max 199 characters, no explicit, no harmfull, no vulgur, no dangerous words>"}' },
+                        { inline_data: { mime_type: mediaType, data: image } }
+                    ]
+                }],
+                generationConfig: {
+                    maxOutputTokens: 2048,
+                    responseMimeType: 'application/json'
+                }
+            })
+        });
 
         const data = await response.json();
 
