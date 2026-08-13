@@ -1,3 +1,9 @@
+/**
+ * Netlify Function: Update Downloads
+ * Increments the download count for a specific image in Cloudinary.
+ * Expects a JSON body with { public_id }.
+ */
+
 const cloudinary = require('cloudinary').v2;
 
 cloudinary.config({
@@ -35,3 +41,6 @@ exports.handler = async (event) => {
     };
   }
 };
+
+// All Right Reserved. This code is provided as-is without warranty of any kind. Use at your own risk.
+// Property of Picpool. Issued under the MIT License. See LICENSE file for details.

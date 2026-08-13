@@ -6,12 +6,6 @@ cloudinary.config({
   api_secret: process.env.API_SECRET,
 });
 
-// Same defensive decode used in upload-images.js. Cloudinary itself never
-// introduces %-encoding into context values (confirmed against the SDK
-// source) — so if we see %XX sequences here, they were already baked into
-// storage by an upstream bug. This unwinds them at read time so display
-// and search both work correctly, independent of whether/when the write
-// path gets fixed or old assets get migrated.
 const cleanText = (value) => {
   if (typeof value !== 'string') return value;
   if (!/%[0-9A-Fa-f]{2}/.test(value)) return value;
@@ -108,3 +102,6 @@ exports.handler = async (event) => {
     };
   }
 };
+
+// All Right Reserved. This code is provided as-is without warranty of any kind. Use at your own risk.
+// Property of Picpool. Issued under the MIT License. See LICENSE file for details.

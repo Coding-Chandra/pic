@@ -1,3 +1,11 @@
+/**
+ * Netlify Function: Upload Images
+ * Handles image uploads to Cloudinary.
+ * Expects a JSON body with { image, title, description, tags }.
+ * Returns the uploaded image's URL and public ID.
+ * 
+ */
+
 const cloudinary = require('cloudinary').v2;
 
 cloudinary.config({
@@ -129,3 +137,6 @@ exports.handler = async (event) => {
     };
   }
 };
+
+// All Right Reserved. This code is provided as-is without warranty of any kind. Use at your own risk.
+// Property of Picpool. Issued under the MIT License. See LICENSE file for details.

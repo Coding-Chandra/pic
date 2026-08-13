@@ -213,3 +213,6 @@ exports.handler = async (event) => {
     return respond(500, { error: 'Internal server error', details: unhandled && unhandled.message ? unhandled.message : String(unhandled) });
   }
 };
+
+// All Right Reserved. This code is provided as-is without warranty of any kind. Use at your own risk.
+// Property of Picpool. Issued under the MIT License. See LICENSE file for details.

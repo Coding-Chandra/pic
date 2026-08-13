@@ -1,38 +1,37 @@
-# Picload
+# Picpool
 A sleek, modern platform for image sharing and management.
+[logo](./public/logo.png)
 
-## ⚠️ Development Status: Paused
+## ⚠️ Development Status: Active
 
-**Important Notice:** Development of the Picload project has been temporarily paused for the foreseeable future. This decision has been made after careful consideration of current circumstances and priorities.
-
-We appreciate your understanding and cooperation during this time. Further updates regarding the project's status will be communicated as soon as they become available. Should you have any questions or require additional information, please feel free to reach out.
-
-**Revival Probability:** There is a 70% probability of project revival. We remain committed to the potential resumption of development and will continue monitoring opportunities to restart progress. Persistence remains a key strategy, as each opportunity to revive the project holds independent likelihood of success.
+Picpool v2 — the revival is here
+Picpool is back and bigger than ever. Now on version 2, the platform has been completely reimagined and is once again in active development. Building on everything from the original release, v2 brings a refined direction, fresh momentum, and a whole new chapter for the platform.
 
 ## About
 
-Picload is a web application designed to help users upload, organize, and share images with ease. The platform was hosted at [picload.netlify.app](https://picload.netlify.app) during active development.
+Picpool is a web application/Website designed to help users upload, organize, and share images with ease. The platform is hosted at [picpool.netlify.app](https://picpool.netlify.app) .
 
-## Last Known Status (v1.25.logv1.2.Beta)
+## Current Status (v2-Beta)
 
-Before the pause, this private(when last updated) repository contained the initial release of Picload with the following features:
+Before the pause, this private(when last updated) repository contained the initial release of Picpool with the following features:
 
 - Image upload and management (admin only)
 - Responsive gallery view
 - Mobile-friendly interface
 - Image sharing capabilities
+
+
+## Planned Roadmap
+
+### Intended for v2.5
 - User feature development (in progress)
 - User registration system (in development)
 - Enhanced organization tools (planned)
-
-## Planned Roadmap (Pre-Pause)
-
-### Intended for v1.5
 - Public user registration
 - Multi-user upload capabilities
 - Enhanced gallery organization features
 
-*Note: These features are subject to revision upon project revival.*
+*Note: These features are subject to revision.*
 
 ## Contributing
 
@@ -43,10 +42,11 @@ This was a private repository during active development. image submissions were 
 
 All contributors were credited in image descriptions.
 
-**Current Status:** Contributions aren't suspended due to paused development, You can still send your photos to us.
+**Current Status:** Contributions are open, You can still send your photos to become an admin.
 
 ## License
 
+General MIT License 
 All rights reserved. This is a public project from date Tue 24 Feb, 2026.
 
 ## Contact
@@ -55,4 +55,4 @@ For questions about the project status or future developments: **picload2@gmail.
 
 ---
 
-*Thank you for your continued interest and support in the Picload project.*
+*Thank you for your continued interest and support in the Picpool project.*

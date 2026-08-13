@@ -1,4 +1,4 @@
-/* Picload — photo detail page. */
+/* Picload — photo detail & Download page. */
 
 * {
     margin: 0;
@@ -299,3 +299,8 @@ select#resolutionSelect option {
         transition-duration: 0.001ms !important;
     }
 }
+
+/* 
+All Right Reserved. This code is provided as-is without warranty of any kind. Use at your own risk.
+Property of Picpool. Issued under the MIT License. See LICENSE file for details.
+*/

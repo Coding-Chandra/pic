@@ -1,6 +1,6 @@
 {
   "name": "photo-gallery",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Photo gallery with Netlify functions and Cloudinary uploads",
   "main": "index.js",
   "scripts": {

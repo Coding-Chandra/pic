@@ -74,6 +74,34 @@
 
     const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
+    function resizeImageForAI(file, maxDim = 1024, quality = 0.8) {
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            const objectUrl = URL.createObjectURL(file);
+            img.onload = () => {
+                URL.revokeObjectURL(objectUrl);
+                let { width, height } = img;
+                if (width > height && width > maxDim) {
+                    height = Math.round(height * (maxDim / width));
+                    width = maxDim;
+                } else if (height >= width && height > maxDim) {
+                    width = Math.round(width * (maxDim / height));
+                    height = maxDim;
+                }
+                const canvas = document.createElement('canvas');
+                canvas.width = width;
+                canvas.height = height;
+                canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+                const dataUrl = canvas.toDataURL('image/jpeg', quality);
+                resolve({ base64: dataUrl.split(',')[1], mediaType: 'image/jpeg' });
+            };
+            img.onerror = () => reject(new Error('Could not load image for resizing'));
+            img.src = objectUrl;
+        });
+    }
+
+    // NOTE: this used to be defined twice — a second, later declaration
+    // (speed-per-character, no ai-typing class)
     async function typeText(el, text, targetMs) {
         el.value = '';
         if (!text) return;
@@ -106,40 +134,34 @@
         document.getElementById('dashboardLink').style.display = 'inline-block';
     }
 
-    function typeText(el, text, speed = 3) {
-        return new Promise(resolve => {
-            el.value = '';
-            el.focus();
-            let i = 0;
-            (function step() {
-                if (i < text.length) {
-                    el.value += text[i++];
-                    setTimeout(step, speed);
-                } else {
-                    resolve();
-                }
-            })();
-        });
-    }
-
-    document.getElementById('photoUpload').addEventListener('change', function(event) {
+    document.getElementById('photoUpload').addEventListener('change', async function(event) {
         const file = event.target.files[0];
         const aiBtn = document.getElementById('aiGenerateBtn');
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const preview = document.getElementById('imagePreview');
-                preview.src = e.target.result;
-                preview.style.display = 'block';
-                previewBase64 = e.target.result.split(',')[1];
-                previewMediaType = file.type;
-                aiBtn.disabled = false;
-            };
-            reader.readAsDataURL(file);
-        } else {
+        if (!file) {
             previewBase64 = null;
             previewMediaType = null;
             aiBtn.disabled = true;
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const preview = document.getElementById('imagePreview');
+            preview.src = e.target.result;
+            preview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+
+        aiBtn.disabled = true;
+        try {
+            const resized = await resizeImageForAI(file);
+            previewBase64 = resized.base64;
+            previewMediaType = resized.mediaType;
+            aiBtn.disabled = false;
+        } catch (err) {
+            console.error('Failed to prepare image for AI generation:', err);
+            previewBase64 = null;
+            previewMediaType = null;
         }
     });
 
@@ -169,6 +191,32 @@
             btn.innerHTML = originalLabel;
         }
     });
+
+    function escapeContextValue(value) {
+        return String(value ?? '').replace(/([=|])/g, '\\$&');
+    }
+
+    const CONTEXT_CHAR_LIMIT = 250;
+
+    function buildContextString(title, description) {
+        const parts = {
+            alt: title,
+            description: description || '',
+        };
+
+        const toString = () => Object.entries(parts)
+            .map(([key, value]) => `${key}=${escapeContextValue(value)}`)
+            .join('|');
+
+        let contextStr = toString();
+        if (contextStr.length > CONTEXT_CHAR_LIMIT) {
+            const overflow = contextStr.length - CONTEXT_CHAR_LIMIT;
+            const keepLength = Math.max(0, parts.description.length - overflow - 1);
+            parts.description = parts.description.slice(0, keepLength) + '…';
+            contextStr = toString();
+        }
+        return contextStr;
+    }
 
     document.getElementById('uploadForm').addEventListener('submit', async function(event) {
         event.preventDefault();
@@ -213,7 +261,6 @@
 
         try {
             const userEmail = currentUser.email;
-            const userName = currentUser.user_metadata?.full_name || userEmail.split('@')[0];
             const userTag = userEmail.replace('@', '_').replace(/\./g, '_');
 
             const formData = new FormData();
@@ -223,17 +270,10 @@
             const publicId = `photo-gallery/${userTag}/${title.replace(/\s+/g, '-').toLowerCase()}-${Date.now()}`;
             formData.append('public_id', publicId);
 
-            const allTags = [...tags, `user-${userTag}`, `owner-${userEmail}`];
+            const allTags = [...tags, `owner-${userEmail}`];
             formData.append('tags', allTags.join(','));
 
-            const ctxParts = [
-                `alt=${encodeURIComponent(title)}`,
-                `description=${encodeURIComponent(description || '')}`,
-                `user_email=${encodeURIComponent(userEmail)}`,
-                `user_id=${encodeURIComponent(currentUser.id || '')}`,
-                `user_name=${encodeURIComponent(userName)}`
-            ];
-            formData.append('context', ctxParts.join('|'));
+            formData.append('context', buildContextString(title, description));
 
             let progress = 0;
             const interval = setInterval(() => {
@@ -285,6 +325,9 @@
     function clearError() {
         document.getElementById('errorMessage').classList.remove('show');
     }
+
+// All Right Reserved. This code is provided as-is without warranty of any kind. Use at your own risk.
+// Property of Picpool. Issued under the MIT License. See LICENSE file for details.
 </script>
 </body>
 </html>

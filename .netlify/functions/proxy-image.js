@@ -1,3 +1,9 @@
+/**
+ * Netlify Function: Proxy Image
+ * Fetches an image from a given URL and returns it with a specified title.
+ * Used to bypass CORS issues when displaying images in the browser.
+ */
+
 const fetch = require('node-fetch');
 
 exports.handler = async (event) => {
@@ -35,3 +41,6 @@ exports.handler = async (event) => {
     };
   }
 };
+
+// All Right Reserved. This code is provided as-is without warranty of any kind. Use at your own risk.
+// Property of Picpool. Issued under the MIT License. See LICENSE file for details.

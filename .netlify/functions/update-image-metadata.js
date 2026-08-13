@@ -1,6 +1,7 @@
 /**
  * Netlify Function: Update Image Metadata
  * Updates title and description for a photo
+ * Used in Dashboard to allow users to edit their photo metadata.
  */
 
 const cloudinary = require('cloudinary').v2;
@@ -131,3 +132,6 @@ exports.handler = async (event) => {
     };
   }
 };
+
+// All Right Reserved. This code is provided as-is without warranty of any kind. Use at your own risk.
+// Property of Picpool. Issued under the MIT License. See LICENSE file for details.

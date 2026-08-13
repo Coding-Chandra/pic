@@ -1,3 +1,8 @@
+/**
+ * PICLOAD Photo Page Script
+ * Handles photo display, metadata, and download functionality on the photo.html page.
+ */
+
 let imagesData = [];
 
 async function loadImages() {
@@ -170,3 +175,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+// All Right Reserved. This code is provided as-is without warranty of any kind. Use at your own risk.
+// Property of Picpool. Issued under the MIT License. See LICENSE file for details.

@@ -1,3 +1,10 @@
+/**
+ * Netlify Function: Update Photo Tags
+ * Updates tags for a photo in Cloudinary.
+ * Expects a JSON body with { photoId, tags }.
+ * not used in the current version of the app, but kept for potential future use.
+ */
+
 const cloudinary = require('cloudinary').v2;
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -14,3 +21,6 @@ exports.handler = async (event) => {
     return { statusCode: 500, body: JSON.stringify({ error: error.message }) };
   }
 };
+
+// All Right Reserved. This code is provided as-is without warranty of any kind. Use at your own risk.
+// Property of Picpool. Issued under the MIT License. See LICENSE file for details.

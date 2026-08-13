@@ -1,11 +1,5 @@
 /**
- * PICLOADDashboard - final updated class
- * - brighter + blurred modal background
- * - tooltips for modal buttons (theme-matching popups)
- * - body scroll lock + image.onload handling
- * - stable modal (zoom, pan, pinch, swipe, keyboard)
- * - fixed delete flow
- * - paginated grid (6 photos/page) with animated page transitions
+ * PICLOADDashboard - final updated class for v2
  */
 
 class PICLOADDashboard {
@@ -1031,3 +1025,6 @@ class PICLOADDashboard {
 document.addEventListener('DOMContentLoaded', () => {
     window.dashboard = new PICLOADDashboard();
 });
+
+// All Right Reserved. This code is provided as-is without warranty of any kind. Use at your own risk.
+// Property of Picpool. Issued under the MIT License. See LICENSE file for details.

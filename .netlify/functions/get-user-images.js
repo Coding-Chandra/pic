@@ -1,6 +1,7 @@
 /**
  * Netlify Function: Get User Images
  * Retrieves all images uploaded by a specific user
+ * used in dashboard
  */
 
 const cloudinary = require('cloudinary').v2;
@@ -103,3 +104,6 @@ exports.handler = async (event) => {
     };
   }
 };
+
+// All Right Reserved. This code is provided as-is without warranty of any kind. Use at your own risk.
+// Property of Picpool. Issued under the MIT License. See LICENSE file for details.

@@ -1,4 +1,4 @@
-/* Picload — public gallery. */
+/* Picload — main-page. */
 
 @import url('https://fonts.googleapis.com/css2?family=Geist:ital,wght@0,100..900;1,100..900&family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap');
 
@@ -635,3 +635,8 @@ header .branding:hover { opacity: 0.75; }
         transition-duration: 0.001ms !important;
     }
 }
+
+/* 
+All Right Reserved. This code is provided as-is without warranty of any kind. Use at your own risk.
+Property of Picpool. Issued under the MIT License. See LICENSE file for details.
+*/

@@ -1,3 +1,9 @@
+/**
+ * PICLOAD Public Gallery Script
+ * Handles the public gallery display, search, filtering, sorting, and pagination on the index.html page.
+ * 
+ */
+
 document.addEventListener('DOMContentLoaded', () => {
     const gallery = document.getElementById('photoGallery');
     const loadingMessage = document.getElementById('loadingMessage');
@@ -20,10 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const imagesPerPage = 12;
     const majorTags = ['Wallpaper', 'Nature', 'Travel', 'Architecture', 'Parks', 'Art', 'Food'];
 
-    // Sync user state and update auth button
-    // Note: this no longer replaces the button's inner content (it holds an
-    // SVG icon in the current markup) — only the tooltip/label and click
-    // handler change, so the icon survives login/logout state changes.
     function syncUserState(user) {
         currentUser = user;
         if (user) {
@@ -262,3 +264,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initial Fetch
     fetchImages(currentUser ? currentUser.id : null);
 });
+
+// All Right Reserved. This code is provided as-is without warranty of any kind. Use at your own risk.
+// Property of Picpool. Issued under the MIT License. See LICENSE file for details.
